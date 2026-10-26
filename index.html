@@ -3,36 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iris's English Learning Hub</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Iris's English Learning</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            pink: '#FF6B8B',
-                            yellow: '#FFD166',
-                            green: '#06D6A0',
-                            blue: '#118AB2',
-                            purple: '#9b5de5',
-                            orange: '#f77f00'
-                        }
-                    },
-                    fontSize: {
-                        'base': '1.25rem', /* 200% scale for readability */
-                        'lg': '1.35rem',
-                        'xl': '1.5rem',
-                        '2xl': '1.85rem',
-                        '3xl': '2.25rem',
-                        '4xl': '2.75rem',
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&family=Noto+Sans+TC:wght@500;700;900&display=swap');
@@ -40,492 +12,750 @@
             font-family: 'Noto Sans TC', 'Nunito', sans-serif;
             background-color: #FFF9F0;
             font-size: 20px;
+            -webkit-tap-highlight-color: transparent;
         }
         .bouncy-btn {
-            transition: all 0.2s ease;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
         }
         .bouncy-btn:active {
             transform: scale(0.95);
         }
-        ::-webkit-scrollbar {
-            height: 10px;
-            width: 10px;
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
         }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 6px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 6px;
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
 <body class="bg-amber-50 text-slate-900 min-h-screen flex flex-col">
 
-    <!-- Top Header Bar -->
-    <header class="bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 text-white shadow-xl sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-3">
-            <!-- Logo & Title -->
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
-                <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center text-pink-600 shadow-lg text-3xl font-black">
-                    👩‍🏫
-                </div>
-                <div>
-                    <h1 class="text-2xl sm:text-3xl font-black tracking-wide flex items-center gap-2">
-                        Iris's English Learning <span class="bg-yellow-300 text-slate-900 text-xs px-2.5 py-1 rounded-full font-black shadow">Interactive Hub</span>
+    <!-- Unified Sticky Top Header & Navigation -->
+    <div class="sticky top-0 z-50 shadow-xl">
+        <header class="bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 text-white px-4 py-3">
+            <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+                <!-- Title -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                    <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center text-pink-600 shadow-md text-2xl font-black shrink-0">
+                        👩‍🏫
+                    </div>
+                    <h1 class="text-2xl sm:text-3xl font-black tracking-wide">
+                        Iris's English Learning
                     </h1>
-                    <p class="text-sm text-pink-100 font-bold">Real-Life English Speaking & Listening Companion</p>
-                </div>
-            </div>
-
-            <!-- User Selector & Admin Toggle -->
-            <div class="flex items-center space-x-3">
-                <div class="bg-white/20 backdrop-blur-md px-4 py-2 rounded-2xl flex items-center space-x-2 border border-white/40 shadow-inner">
-                    <span class="text-sm text-amber-200 font-black">使用者:</span>
-                    <select id="userSelector" onchange="changeUser(this.value)" class="bg-transparent text-white font-black text-base focus:outline-none cursor-pointer">
-                        <!-- Populated dynamically -->
-                    </select>
                 </div>
 
-                <button onclick="promptAdminLogin()" class="bg-amber-400 hover:bg-amber-300 text-slate-900 px-4 py-2.5 rounded-2xl font-black text-sm shadow-lg transition flex items-center gap-2">
-                    <i class="fa-solid fa-gear"></i> 後台管理
-                </button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Navigation Bar -->
-    <nav class="bg-white shadow-md border-b border-amber-200 sticky top-[75px] z-40">
-        <div class="max-w-7xl mx-auto px-4 flex overflow-x-auto space-x-3 py-3 no-scrollbar">
-            <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-5 py-3 rounded-2xl font-black text-base bg-pink-500 text-white shadow-md transition flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-house"></i> 首頁大廳
-            </button>
-            <button onclick="switchTab('alphabet')" id="nav-alphabet" class="nav-btn px-5 py-3 rounded-2xl font-bold text-base bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-font-awesome text-pink-500"></i> 1. Alphabet 字母
-            </button>
-            <button onclick="switchTab('numbers')" id="nav-numbers" class="nav-btn px-5 py-3 rounded-2xl font-bold text-base bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-123 text-blue-500"></i> 2. Numbers 數字
-            </button>
-            <button onclick="switchTab('phonics')" id="nav-phonics" class="nav-btn px-5 py-3 rounded-2xl font-bold text-base bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-ear-listen text-purple-500"></i> 3. Phonics 發音拼讀
-            </button>
-            <button onclick="switchTab('lessons')" id="nav-lessons" class="nav-btn px-5 py-3 rounded-2xl font-bold text-base bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-book-open text-emerald-500"></i> 4. 上課囉 (Lessons)
-            </button>
-            <button onclick="switchTab('tips')" id="nav-tips" class="nav-btn px-5 py-3 rounded-2xl font-bold text-base bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-mug-hot text-amber-500"></i> 5. 生活常用金句速查
-            </button>
-            <button onclick="switchTab('fiveset')" id="nav-fiveset" class="nav-btn px-5 py-3 rounded-2xl font-bold text-base bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-2 whitespace-nowrap">
-                <i class="fa-solid fa-list-check text-indigo-500"></i> 6. 500常用生活句子
-            </button>
-        </div>
-    </nav>
-
-    <!-- Content Container -->
-    <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full space-y-8">
-
-        <!-- ================= TAB 1: HOME ================= -->
-        <div id="tab-home" class="tab-content space-y-8">
-            <!-- Greeting Banner -->
-            <div class="bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 rounded-3xl p-8 sm:p-12 text-white shadow-2xl relative overflow-hidden">
-                <div class="absolute -right-10 -bottom-10 text-9xl opacity-20">🌟</div>
-                <div class="relative z-10 max-w-3xl">
-                    <span id="welcomeUserBadge" class="bg-amber-300 text-slate-900 font-black px-4 py-1.5 rounded-full text-sm uppercase tracking-wider shadow">Hello!</span>
-                    <h2 class="text-4xl sm:text-5xl font-black mt-4 leading-tight">歡迎來到 Iris 的英語學習寶典！</h2>
-                    <p class="mt-4 text-pink-100 text-lg sm:text-xl font-bold leading-relaxed">
-                        點擊任意圖片或生字卡片，立即聆聽標準發音與慢速練習！色彩鮮豔、字體超大，輕鬆開口說英文！
-                    </p>
-                    <div class="mt-8 flex flex-wrap gap-4">
-                        <button onclick="switchTab('lessons')" class="bg-white text-pink-600 font-black px-8 py-4 rounded-2xl shadow-xl hover:bg-pink-50 transition flex items-center gap-3 text-lg">
-                            <i class="fa-solid fa-book-open"></i> 開始「上課囉」
-                        </button>
-                        <button onclick="switchTab('fiveset')" class="bg-amber-400 hover:bg-amber-300 text-slate-900 font-black px-8 py-4 rounded-2xl shadow-xl transition flex items-center gap-3 text-lg">
-                            <i class="fa-solid fa-list-check"></i> 500常用生活句子
-                        </button>
+                <!-- User Selector, Stop Audio & Admin Toggle -->
+                <div class="flex items-center space-x-2">
+                    <button onclick="stopAllAudio()" class="bg-rose-500 hover:bg-rose-600 text-white px-3 py-2 rounded-2xl font-black text-sm shadow-md transition flex items-center gap-1 bouncy-btn" title="停止聲音">
+                        <i class="fa-solid fa-volume-xmark"></i> 停止發音
+                    </button>
+                    <div class="bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-2xl flex items-center space-x-1.5 border border-white/40">
+                        <span class="text-xs text-amber-200 font-black">使用者:</span>
+                        <select id="userSelector" onchange="changeUser(this.value)" class="bg-transparent text-white font-black text-base focus:outline-none cursor-pointer">
+                        </select>
                     </div>
-                </div>
-            </div>
-
-            <!-- 6 Numbered Learning Sections Overview -->
-            <div>
-                <h3 class="text-2xl font-black text-slate-800 mb-6 flex items-center gap-3">
-                    <i class="fa-solid fa-compass text-pink-500"></i> 六大核心學習專區 (6 Learning Hub Sections)
-                </h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- 1 -->
-                    <div onclick="switchTab('alphabet')" class="bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition cursor-pointer border-4 border-pink-200 hover:border-pink-500 flex flex-col justify-between group">
-                        <div>
-                            <div class="flex justify-between items-center mb-4">
-                                <span class="w-12 h-12 bg-pink-500 text-white rounded-2xl flex items-center justify-center font-black text-2xl shadow">1</span>
-                                <span class="text-4xl">🔤</span>
-                            </div>
-                            <h4 class="text-2xl font-black text-slate-900">Alphabet 字母專區</h4>
-                            <p class="text-slate-600 text-base mt-2 font-bold">26個大小寫字母與標準發音、圖文對照與ABC字母歌。</p>
-                        </div>
-                        <div class="mt-6 text-pink-600 font-black text-base flex items-center gap-2">
-                            點擊進入學習 <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition"></i>
-                        </div>
-                    </div>
-
-                    <!-- 2 -->
-                    <div onclick="switchTab('numbers')" class="bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition cursor-pointer border-4 border-blue-200 hover:border-blue-500 flex flex-col justify-between group">
-                        <div>
-                            <div class="flex justify-between items-center mb-4">
-                                <span class="w-12 h-12 bg-blue-500 text-white rounded-2xl flex items-center justify-center font-black text-2xl shadow">2</span>
-                                <span class="text-4xl">🔢</span>
-                            </div>
-                            <h4 class="text-2xl font-black text-slate-900">Numbers 數字與金額</h4>
-                            <p class="text-slate-600 text-base mt-2 font-bold">1-100 數字、時間與超市結帳必備常用金額與發音。</p>
-                        </div>
-                        <div class="mt-6 text-blue-600 font-black text-base flex items-center gap-2">
-                            點擊進入學習 <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition"></i>
-                        </div>
-                    </div>
-
-                    <!-- 3 -->
-                    <div onclick="switchTab('phonics')" class="bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition cursor-pointer border-4 border-purple-200 hover:border-purple-500 flex flex-col justify-between group">
-                        <div>
-                            <div class="flex justify-between items-center mb-4">
-                                <span class="w-12 h-12 bg-purple-500 text-white rounded-2xl flex items-center justify-center font-black text-2xl shadow">3</span>
-                                <span class="text-4xl">🧩</span>
-                            </div>
-                            <h4 class="text-2xl font-black text-slate-900">Phonics 發音拼讀</h4>
-                            <p class="text-slate-600 text-base mt-2 font-bold">自然發音與拼讀組合（如 -at, -an, -ck），看字會讀。</p>
-                        </div>
-                        <div class="mt-6 text-purple-600 font-black text-base flex items-center gap-2">
-                            點擊進入學習 <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition"></i>
-                        </div>
-                    </div>
-
-                    <!-- 4 -->
-                    <div onclick="switchTab('lessons')" class="bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition cursor-pointer border-4 border-emerald-200 hover:border-emerald-500 flex flex-col justify-between group">
-                        <div>
-                            <div class="flex justify-between items-center mb-4">
-                                <span class="w-12 h-12 bg-emerald-500 text-white rounded-2xl flex items-center justify-center font-black text-2xl shadow">4</span>
-                                <span class="text-4xl">📖</span>
-                            </div>
-                            <h4 class="text-2xl font-black text-slate-900">上課囉 (Lessons 1-10)</h4>
-                            <p class="text-slate-600 text-base mt-2 font-bold">從第一課到第十課，循序漸進的實用單字、例句與對話。</p>
-                        </div>
-                        <div class="mt-6 text-emerald-600 font-black text-base flex items-center gap-2">
-                            點擊進入學習 <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition"></i>
-                        </div>
-                    </div>
-
-                    <!-- 5 -->
-                    <div onclick="switchTab('tips')" class="bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition cursor-pointer border-4 border-amber-200 hover:border-amber-500 flex flex-col justify-between group">
-                        <div>
-                            <div class="flex justify-between items-center mb-4">
-                                <span class="w-12 h-12 bg-amber-500 text-white rounded-2xl flex items-center justify-center font-black text-2xl shadow">5</span>
-                                <span class="text-4xl">☕</span>
-                            </div>
-                            <h4 class="text-2xl font-black text-slate-900">生活常用金句速查</h4>
-                            <p class="text-slate-600 text-base mt-2 font-bold">餐廳點餐、找座位、超市買菜與問路超實用金句。</p>
-                        </div>
-                        <div class="mt-6 text-amber-600 font-black text-base flex items-center gap-2">
-                            點擊進入學習 <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition"></i>
-                        </div>
-                    </div>
-
-                    <!-- 6 -->
-                    <div onclick="switchTab('fiveset')" class="bg-white rounded-3xl p-6 shadow-lg hover:shadow-2xl transition cursor-pointer border-4 border-indigo-200 hover:border-indigo-500 flex flex-col justify-between group">
-                        <div>
-                            <div class="flex justify-between items-center mb-4">
-                                <span class="w-12 h-12 bg-indigo-500 text-white rounded-2xl flex items-center justify-center font-black text-2xl shadow">6</span>
-                                <span class="text-4xl">📚</span>
-                            </div>
-                            <h4 class="text-2xl font-black text-slate-900">500常用生活句子</h4>
-                            <p class="text-slate-600 text-base mt-2 font-bold">精選 500 句免費實用生活英文句子與隨身發音播放。</p>
-                        </div>
-                        <div class="mt-6 text-indigo-600 font-black text-base flex items-center gap-2">
-                            點擊進入學習 <i class="fa-solid fa-arrow-right group-hover:translate-x-2 transition"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ================= TAB 2: ALPHABET ================= -->
-        <div id="tab-alphabet" class="tab-content hidden space-y-6">
-            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-pink-100">
-                <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
-                    <div>
-                        <h2 class="text-3xl font-black text-slate-900 flex items-center gap-3">
-                            <i class="fa-solid fa-font-awesome text-pink-500"></i> 1. Alphabet 字母大小寫與發音
-                        </h2>
-                        <p class="text-slate-600 text-lg mt-1 font-bold">點擊卡片聽發音，比照精美圖卡學習！</p>
-                    </div>
-                    <button onclick="speakAlphabetSong()" class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-2xl font-black text-lg shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-music"></i> 播放 ABC 字母歌
+                    <button onclick="promptAdminLogin()" class="bg-amber-400 hover:bg-amber-300 text-slate-900 px-3.5 py-2 rounded-2xl font-black text-sm shadow-md transition flex items-center gap-1.5 bouncy-btn">
+                        <i class="fa-solid fa-gear"></i> 後台管理
                     </button>
                 </div>
-                <div id="alphabetGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
-                    <!-- JS populated -->
+            </div>
+        </header>
+
+        <!-- Sub-Navigation Bar Inside Sticky Container -->
+        <nav class="bg-white/95 backdrop-blur border-b-2 border-amber-200 px-3 py-2">
+            <div class="max-w-7xl mx-auto flex overflow-x-auto space-x-2 py-1 no-scrollbar">
+                <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-4 py-2.5 rounded-2xl font-black text-base bg-pink-500 text-white shadow transition flex items-center gap-1.5 whitespace-nowrap bouncy-btn">
+                    <i class="fa-solid fa-house"></i> 首頁大廳
+                </button>
+                <button onclick="switchTab('alphabet')" id="nav-alphabet" class="nav-btn px-4 py-2.5 rounded-2xl font-black text-base bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-1.5 whitespace-nowrap bouncy-btn">
+                    1. 字母
+                </button>
+                <button onclick="switchTab('numbers')" id="nav-numbers" class="nav-btn px-4 py-2.5 rounded-2xl font-black text-base bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-1.5 whitespace-nowrap bouncy-btn">
+                    2. 數字
+                </button>
+                <button onclick="switchTab('phonics')" id="nav-phonics" class="nav-btn px-4 py-2.5 rounded-2xl font-black text-base bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-1.5 whitespace-nowrap bouncy-btn">
+                    3. 發音拼讀
+                </button>
+                <button onclick="switchTab('lessons')" id="nav-lessons" class="nav-btn px-4 py-2.5 rounded-2xl font-black text-base bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-1.5 whitespace-nowrap bouncy-btn">
+                    4. 上課囉
+                </button>
+                <button onclick="switchTab('tips')" id="nav-tips" class="nav-btn px-4 py-2.5 rounded-2xl font-black text-base bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-1.5 whitespace-nowrap bouncy-btn">
+                    5. 生活金句
+                </button>
+                <button onclick="switchTab('fiveset')" id="nav-fiveset" class="nav-btn px-4 py-2.5 rounded-2xl font-black text-base bg-slate-100 text-slate-700 hover:bg-slate-200 transition flex items-center gap-1.5 whitespace-nowrap bouncy-btn">
+                    6. 500常用句
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content Container -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
+
+        <!-- ================= TAB 0: HOME ================= -->
+        <div id="tab-home" class="tab-content space-y-6">
+            <div class="bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-600 rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+                <div class="relative z-10">
+                    <span id="welcomeUserBadge" class="bg-amber-300 text-slate-900 font-black px-4 py-1 rounded-full text-sm uppercase tracking-wider shadow">Hello!</span>
+                    <h2 class="text-3xl sm:text-4xl font-black mt-3 leading-tight">歡迎來到英語學習寶典</h2>
+                    <p class="mt-2 text-pink-100 text-lg font-bold">點選下方六大專區，直接聽發音開口練習！</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div onclick="switchTab('alphabet')" class="bg-pink-50 rounded-3xl p-6 shadow-md hover:shadow-xl transition cursor-pointer border-4 border-pink-300 flex flex-col justify-between bouncy-btn">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="w-12 h-12 bg-pink-500 text-white rounded-2xl flex items-center justify-center font-black text-2xl shadow">1</span>
+                        <span class="text-5xl">🔤</span>
+                    </div>
+                    <h4 class="text-2xl font-black text-slate-900">Alphabet 字母專區</h4>
+                    <p class="text-slate-600 text-base mt-1 font-bold">26個字母本身發音、代表單字與字母歌</p>
+                </div>
+
+                <div onclick="switchTab('numbers')" class="bg-emerald-50 rounded-3xl p-6 shadow-md hover:shadow-xl transition cursor-pointer border-4 border-emerald-300 flex flex-col justify-between bouncy-btn">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="w-12 h-12 bg-emerald-500 text-white rounded-2xl flex items-center justify-center font-black text-2xl shadow">2</span>
+                        <span class="text-5xl">🍓</span>
+                    </div>
+                    <h4 class="text-2xl font-black text-slate-900">Numbers 數字與金額</h4>
+                    <p class="text-slate-600 text-base mt-1 font-bold">1-100 數字與結帳必備常用金額發音</p>
+                </div>
+
+                <div onclick="switchTab('phonics')" class="bg-sky-50 rounded-3xl p-6 shadow-md hover:shadow-xl transition cursor-pointer border-4 border-sky-300 flex flex-col justify-between bouncy-btn">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="w-12 h-12 bg-sky-500 text-white rounded-2xl flex items-center justify-center font-black text-2xl shadow">3</span>
+                        <span class="text-5xl">🧩</span>
+                    </div>
+                    <h4 class="text-2xl font-black text-slate-900">Phonics 發音拼讀</h4>
+                    <p class="text-slate-600 text-base mt-1 font-bold">A-Z 自然發音 (KK音標輔助) 與字群拼讀</p>
+                </div>
+
+                <div onclick="switchTab('lessons')" class="bg-purple-50 rounded-3xl p-6 shadow-md hover:shadow-xl transition cursor-pointer border-4 border-purple-300 flex flex-col justify-between bouncy-btn">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="w-12 h-12 bg-purple-500 text-white rounded-2xl flex items-center justify-center font-black text-2xl shadow">4</span>
+                        <span class="text-5xl">📖</span>
+                    </div>
+                    <h4 class="text-2xl font-black text-slate-900">上課囉 (第1~10課+)</h4>
+                    <p class="text-slate-600 text-base mt-1 font-bold">生字、例句與實用生活情境對話</p>
+                </div>
+
+                <div onclick="switchTab('tips')" class="bg-amber-50 rounded-3xl p-6 shadow-md hover:shadow-xl transition cursor-pointer border-4 border-amber-300 flex flex-col justify-between bouncy-btn">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="w-12 h-12 bg-amber-500 text-white rounded-2xl flex items-center justify-center font-black text-2xl shadow">5</span>
+                        <span class="text-5xl">☕</span>
+                    </div>
+                    <h4 class="text-2xl font-black text-slate-900">生活常用金句速查</h4>
+                    <p class="text-slate-600 text-base mt-1 font-bold">餐廳、超市、問路、交際必備隨手查</p>
+                </div>
+
+                <div onclick="switchTab('fiveset')" class="bg-indigo-50 rounded-3xl p-6 shadow-md hover:shadow-xl transition cursor-pointer border-4 border-indigo-300 flex flex-col justify-between bouncy-btn">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="w-12 h-12 bg-indigo-500 text-white rounded-2xl flex items-center justify-center font-black text-2xl shadow">6</span>
+                        <span class="text-5xl">📚</span>
+                    </div>
+                    <h4 class="text-2xl font-black text-slate-900">500常用生活句子</h4>
+                    <p class="text-slate-600 text-base mt-1 font-bold">分類搜尋日常高頻率短句與慢速朗讀</p>
                 </div>
             </div>
         </div>
 
-        <!-- ================= TAB 3: NUMBERS ================= -->
+        <!-- ================= TAB 1: ALPHABET ================= -->
+        <div id="tab-alphabet" class="tab-content hidden space-y-6">
+            <div class="flex justify-between items-center">
+                <button onclick="goBack()" class="bg-white hover:bg-slate-100 text-slate-800 border-2 border-slate-300 px-5 py-2.5 rounded-2xl font-black text-lg shadow flex items-center gap-2 bouncy-btn">
+                    <i class="fa-solid fa-arrow-left"></i> 回上一頁
+                </button>
+                <button id="abcSongBtn" onclick="toggleAbcSong()" class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-2xl font-black text-lg shadow-lg flex items-center gap-2 bouncy-btn">
+                    <i class="fa-solid fa-music"></i> <span>播放 ABC 字母歌 (有旋律)</span>
+                </button>
+            </div>
+
+            <div class="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border-4 border-pink-200">
+                <h2 class="text-3xl font-black text-slate-900 mb-6 flex items-center gap-3">
+                    1. Alphabet 字母大小寫與發音
+                </h2>
+                <div id="alphabetGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= TAB 2: NUMBERS ================= -->
         <div id="tab-numbers" class="tab-content hidden space-y-6">
-            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-blue-100">
-                <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
-                    <div>
-                        <h2 class="text-3xl font-black text-slate-900 flex items-center gap-3">
-                            <i class="fa-solid fa-123 text-blue-500"></i> 2. Numbers 數字與金額發音
-                        </h2>
-                        <p class="text-slate-600 text-lg mt-1 font-bold">點擊數字聽發音，購物結帳不再緊張。</p>
-                    </div>
-                    <div class="flex flex-wrap gap-2">
-                        <button onclick="filterNumbers('basic')" id="num-btn-1" class="px-5 py-3 rounded-2xl font-black text-base bg-blue-600 text-white shadow">1 - 20 基礎</button>
-                        <button onclick="filterNumbers('tens')" id="num-btn-2" class="px-5 py-3 rounded-2xl font-black text-base bg-slate-100 text-slate-700 hover:bg-slate-200">10 - 100 整數</button>
-                        <button onclick="filterNumbers('money')" id="num-btn-3" class="px-5 py-3 rounded-2xl font-black text-base bg-slate-100 text-slate-700 hover:bg-slate-200">💰 常用金額</button>
-                    </div>
+            <div class="flex flex-wrap justify-between items-center gap-3">
+                <button onclick="goBack()" class="bg-white hover:bg-slate-100 text-slate-800 border-2 border-slate-300 px-5 py-2.5 rounded-2xl font-black text-lg shadow flex items-center gap-2 bouncy-btn">
+                    <i class="fa-solid fa-arrow-left"></i> 回上一頁
+                </button>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="filterNumbers('basic')" id="num-btn-1" class="px-5 py-2.5 rounded-2xl font-black text-base bg-blue-600 text-white shadow bouncy-btn">1 - 20 基礎</button>
+                    <button onclick="filterNumbers('tens')" id="num-btn-2" class="px-5 py-2.5 rounded-2xl font-black text-base bg-white text-slate-700 border-2 border-slate-200 bouncy-btn">10 - 100 整數</button>
+                    <button onclick="filterNumbers('money')" id="num-btn-3" class="px-5 py-2.5 rounded-2xl font-black text-base bg-white text-slate-700 border-2 border-slate-200 bouncy-btn">💰 常用金額</button>
                 </div>
+            </div>
+
+            <div class="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border-4 border-blue-200">
+                <h2 class="text-3xl font-black text-slate-900 mb-6">2. Numbers 數字與金額發音</h2>
                 <div id="numbersGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
-                    <!-- JS populated -->
                 </div>
             </div>
         </div>
 
-        <!-- ================= TAB 4: PHONICS ================= -->
+        <!-- ================= TAB 3: PHONICS ================= -->
         <div id="tab-phonics" class="tab-content hidden space-y-6">
-            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-purple-100">
-                <div class="mb-6">
-                    <h2 class="text-3xl font-black text-slate-900 flex items-center gap-3">
-                        <i class="fa-solid fa-ear-listen text-purple-500"></i> 3. Phonics 發音拼讀圖卡
-                    </h2>
-                    <p class="text-slate-600 text-lg mt-1 font-bold">看圖學拼音！點擊卡片聽發音與組合（Word Family）。</p>
+            <div class="flex flex-wrap justify-between items-center gap-3">
+                <button onclick="goBack()" class="bg-white hover:bg-slate-100 text-slate-800 border-2 border-slate-300 px-5 py-2.5 rounded-2xl font-black text-lg shadow flex items-center gap-2 bouncy-btn">
+                    <i class="fa-solid fa-arrow-left"></i> 回上一頁
+                </button>
+                <div class="flex flex-wrap gap-2">
+                    <button onclick="switchPhonicsMode('kk')" id="phonics-mode-kk" class="px-5 py-2.5 rounded-2xl font-black text-base bg-purple-600 text-white shadow bouncy-btn">
+                        🔤 基礎自然發音 & KK音標
+                    </button>
+                    <button onclick="switchPhonicsMode('family')" id="phonics-mode-family" class="px-5 py-2.5 rounded-2xl font-black text-base bg-white text-slate-700 border-2 border-slate-200 bouncy-btn">
+                        🧩 字母組合拼讀 (-at, -an...)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sub-section 3A: KK & Letter Sounds -->
+            <div id="phonicsKKSection" class="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border-4 border-purple-200 space-y-6">
+                <div>
+                    <h2 class="text-3xl font-black text-slate-900">基礎字母自然發音與 KK 音標</h2>
+                    <p class="text-slate-600 font-bold mt-1">點擊「發音鍵」聽字母的自然發音與中文諧音輔助</p>
+                </div>
+                <div id="kkGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5">
+                </div>
+            </div>
+
+            <!-- Sub-section 3B: Word Families -->
+            <div id="phonicsFamilySection" class="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border-4 border-purple-200 hidden space-y-6">
+                <div>
+                    <h2 class="text-3xl font-black text-slate-900">常見字母組合拼讀練習</h2>
+                    <p class="text-slate-600 font-bold mt-1">點擊上方彩色標題按鈕可聽整組發音，點擊下方字卡聽個別發音</p>
                 </div>
                 <div id="phonicsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <!-- JS populated -->
                 </div>
             </div>
         </div>
 
-        <!-- ================= TAB 5: LESSONS (1-10) ================= -->
+        <!-- ================= TAB 4: LESSONS ================= -->
         <div id="tab-lessons" class="tab-content hidden space-y-6">
-            <div class="bg-white rounded-3xl p-6 shadow-xl border-4 border-emerald-100">
-                <div class="mb-6">
-                    <h2 class="text-3xl font-black text-slate-900 flex items-center gap-3">
-                        <i class="fa-solid fa-book-open text-emerald-500"></i> 4. 上課囉：第 1 課到第 10 課
-                    </h2>
-                    <p class="text-slate-600 text-lg mt-1 font-bold">選擇您想學習的課程，每課包含豐富生字、例句與實用對話！</p>
-                </div>
-                <!-- Lesson Navigation Pills -->
+            <div class="flex justify-between items-center">
+                <button onclick="goBack()" class="bg-white hover:bg-slate-100 text-slate-800 border-2 border-slate-300 px-5 py-2.5 rounded-2xl font-black text-lg shadow flex items-center gap-2 bouncy-btn">
+                    <i class="fa-solid fa-arrow-left"></i> 回上一頁
+                </button>
+            </div>
+
+            <div class="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border-4 border-emerald-200">
+                <h2 class="text-3xl font-black text-slate-900 mb-4">4. 上課囉</h2>
                 <div id="lessonsPills" class="flex overflow-x-auto space-x-3 pb-4 no-scrollbar">
-                    <!-- JS populated -->
                 </div>
-                <!-- Active Lesson Content -->
-                <div id="lessonDetailContainer" class="mt-6">
-                    <!-- JS populated -->
+                <div id="lessonDetailContainer" class="mt-4">
                 </div>
             </div>
         </div>
 
-        <!-- ================= TAB 6: TIPS (金句速查) ================= -->
+        <!-- ================= TAB 5: TIPS ================= -->
         <div id="tab-tips" class="tab-content hidden space-y-6">
-            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-amber-100">
-                <div class="mb-6">
-                    <h2 class="text-3xl font-black text-slate-900 flex items-center gap-3">
-                        <i class="fa-solid fa-mug-hot text-amber-500"></i> 5. 生活常用金句速查
-                    </h2>
-                    <p class="text-slate-600 text-lg mt-1 font-bold">餐廳點餐、美食街找座位、超市購物最實用金句隨點隨聽！</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="tipsGrid">
-                    <!-- JS populated -->
+            <div class="flex justify-between items-center">
+                <button onclick="goBack()" class="bg-white hover:bg-slate-100 text-slate-800 border-2 border-slate-300 px-5 py-2.5 rounded-2xl font-black text-lg shadow flex items-center gap-2 bouncy-btn">
+                    <i class="fa-solid fa-arrow-left"></i> 回上一頁
+                </button>
+            </div>
+
+            <div class="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border-4 border-amber-200">
+                <h2 class="text-3xl font-black text-slate-900 mb-6">5. 生活常用金句速查</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5" id="tipsGrid">
                 </div>
             </div>
         </div>
 
-        <!-- ================= TAB 7: 500 SENTENCES ================= -->
+        <!-- ================= TAB 6: 500 SENTENCES ================= -->
         <div id="tab-fiveset" class="tab-content hidden space-y-6">
-            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-4 border-indigo-100">
-                <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
-                    <div>
-                        <h2 class="text-3xl font-black text-slate-900 flex items-center gap-3">
-                            <i class="fa-solid fa-list-check text-indigo-500"></i> 6. 500 常用生活句子精選庫
-                        </h2>
-                        <p class="text-slate-600 text-lg mt-1 font-bold">免費資源精選實用生活句，支援標準與慢速發音朗讀。</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <input type="text" id="sentenceSearchInput" oninput="filterSentences()" placeholder="搜尋關鍵字..." class="px-4 py-3 rounded-2xl border-2 border-indigo-200 text-base font-bold focus:outline-none focus:border-indigo-500">
-                    </div>
-                </div>
-                <div id="sentencesListContainer" class="space-y-4 max-h-[700px] overflow-y-auto pr-2">
-                    <!-- JS populated -->
+            <div class="flex flex-wrap justify-between items-center gap-3">
+                <button onclick="goBack()" class="bg-white hover:bg-slate-100 text-slate-800 border-2 border-slate-300 px-5 py-2.5 rounded-2xl font-black text-lg shadow flex items-center gap-2 bouncy-btn">
+                    <i class="fa-solid fa-arrow-left"></i> 回上一頁
+                </button>
+                <input type="text" id="sentenceSearchInput" oninput="filterSentences()" placeholder="🔍 搜尋中英文關鍵字..." class="px-5 py-3 rounded-2xl border-2 border-indigo-300 text-lg font-bold focus:outline-none focus:border-indigo-600 bg-white shadow-sm">
+            </div>
+
+            <div class="bg-white rounded-3xl p-5 sm:p-8 shadow-xl border-4 border-indigo-200">
+                <h2 class="text-3xl font-black text-slate-900 mb-6">6. 500 常用生活句子庫</h2>
+                <div id="sentencesListContainer" class="space-y-4">
                 </div>
             </div>
         </div>
 
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-300 py-8 mt-12 text-center text-base">
-        <div class="max-w-7xl mx-auto px-4 space-y-2">
-            <p class="font-bold text-white">❤️ Iris's English Learning Hub (iPhone Friendly Edition)</p>
-            <p class="text-sm text-slate-400">超大字體 200%+、全彩圖文對照、支援多使用者與密碼後台管理。</p>
-        </div>
-    </footer>
-
-    <!-- Admin Password & Management Modal -->
-    <div id="adminModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 sm:p-8 shadow-2xl relative">
-            <button onclick="closeAdminModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-700 text-3xl font-bold">
+    <!-- Admin Password & Full CMS Modal -->
+    <div id="adminModal" class="fixed inset-0 bg-slate-900/75 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-6">
+        <div class="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] overflow-y-auto p-6 sm:p-8 shadow-2xl relative border-4 border-amber-300">
+            <button onclick="closeAdminModal()" class="absolute top-5 right-5 w-12 h-12 bg-slate-100 hover:bg-slate-200 rounded-full text-slate-700 text-2xl font-black flex items-center justify-center">
                 <i class="fa-solid fa-xmark"></i>
             </button>
             
-            <!-- Login Step -->
-            <div id="adminLoginSection">
+            <!-- Step 1: Login -->
+            <div id="adminLoginSection" class="py-6">
                 <div class="text-center mb-6">
                     <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center text-3xl font-bold mx-auto mb-3 shadow">
                         🔒
                     </div>
-                    <h3 class="text-2xl font-black text-slate-900">後台管理員登入</h3>
-                    <p class="text-sm text-slate-500 font-bold mt-1">請輸入預設管理密碼：1234</p>
+                    <h3 class="text-2xl font-black text-slate-900">後台管理登入</h3>
+                    <p class="text-base text-slate-500 font-bold mt-1">請輸入管理密碼 (預設 1234)</p>
                 </div>
-                <form onsubmit="handleAdminLogin(event)" class="space-y-4 max-w-md mx-auto">
-                    <div>
-                        <input type="password" id="adminPasswordInput" required placeholder="請輸入密碼 (1234)" class="w-full px-5 py-4 rounded-2xl border-2 border-slate-300 focus:ring-4 focus:ring-amber-400 focus:outline-none text-lg font-bold text-center tracking-widest">
-                    </div>
-                    <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-900 py-4 rounded-2xl font-black text-lg shadow-lg transition">
-                        確認登入
+                <form onsubmit="handleAdminLogin(event)" class="space-y-4 max-w-sm mx-auto">
+                    <input type="password" id="adminPasswordInput" required placeholder="1234" class="w-full px-5 py-4 rounded-2xl border-2 border-slate-300 text-2xl font-black text-center tracking-widest focus:border-amber-500 focus:outline-none">
+                    <button type="submit" class="w-full bg-amber-400 hover:bg-amber-300 text-slate-900 py-4 rounded-2xl font-black text-xl shadow-lg">
+                        進入後台
                     </button>
                 </form>
             </div>
 
-            <!-- Management Panel Step -->
+            <!-- Step 2: Full Management Panel -->
             <div id="adminPanelSection" class="hidden space-y-6">
-                <div class="flex items-center space-x-3 pb-4 border-b border-slate-200">
-                    <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center text-2xl font-bold">
-                        ⚙️
-                    </div>
-                    <div>
-                        <h3 class="text-2xl font-black text-slate-900">使用者管理中心</h3>
-                        <p class="text-sm text-slate-500 font-bold">新增或刪除學習使用者</p>
+                <div class="border-b-2 border-slate-200 pb-4">
+                    <h3 class="text-2xl font-black text-slate-900 flex items-center gap-2">
+                        ⚙️ 後台管理與內容新增中心
+                    </h3>
+                    <p class="text-sm text-slate-600 font-bold mt-1">在這裡新增的所有內容會自動儲存，也可匯出檔案傳到 iPhone 匯入！</p>
+                </div>
+
+                <!-- Admin Sub-Tabs -->
+                <div class="flex flex-wrap gap-2 border-b border-slate-200 pb-3">
+                    <button onclick="switchAdminTab('users')" id="adm-tab-users" class="adm-tab-btn px-4 py-2 rounded-xl font-black text-sm bg-slate-900 text-white">👤 使用者管理</button>
+                    <button onclick="switchAdminTab('phonics')" id="adm-tab-phonics" class="adm-tab-btn px-4 py-2 rounded-xl font-black text-sm bg-slate-100 text-slate-700">🧩 新增發音拼讀 (第3區)</button>
+                    <button onclick="switchAdminTab('lessons')" id="adm-tab-lessons" class="adm-tab-btn px-4 py-2 rounded-xl font-black text-sm bg-slate-100 text-slate-700">📖 新增課程/生字 (第4區)</button>
+                    <button onclick="switchAdminTab('tips')" id="adm-tab-tips" class="adm-tab-btn px-4 py-2 rounded-xl font-black text-sm bg-slate-100 text-slate-700">☕ 新增生活金句 (第5區)</button>
+                    <button onclick="switchAdminTab('backup')" id="adm-tab-backup" class="adm-tab-btn px-4 py-2 rounded-xl font-black text-sm bg-amber-100 text-amber-900 border border-amber-300">📲 電腦/iPhone 匯出匯入</button>
+                </div>
+
+                <!-- 1. Admin Users -->
+                <div id="adm-content-users" class="adm-content space-y-4">
+                    <form onsubmit="handleAddUser(event)" class="bg-slate-50 p-4 rounded-2xl border border-slate-200 flex gap-3">
+                        <input type="text" id="newUserName" required placeholder="輸入新使用者名稱 (例如: Lily)" class="flex-1 px-4 py-3 rounded-xl border border-slate-300 text-base font-bold">
+                        <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-black text-base shadow">新增使用者</button>
+                    </form>
+                    <div id="adminUsersList" class="space-y-2"></div>
+                </div>
+
+                <!-- 2. Admin Phonics (Add Word Family or Item) -->
+                <div id="adm-content-phonics" class="adm-content hidden space-y-6">
+                    <form onsubmit="handleAddPhonicsItem(event)" class="bg-purple-50 p-5 rounded-2xl border-2 border-purple-200 space-y-4">
+                        <h4 class="text-lg font-black text-purple-900">➕ 新增拼讀字卡到第 3 區</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-black text-slate-700 mb-1">選擇或輸入拼讀群組 (例如 -at, -op, -sh)</label>
+                                <input type="text" id="admPhonicsGroup" required placeholder="例如: -at" class="w-full px-3 py-2.5 rounded-xl border border-purple-300 font-bold text-base">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-black text-slate-700 mb-1">群組發音提示詞 (點標題時唸的音)</label>
+                                <input type="text" id="admPhonicsSound" required placeholder="例如: at, cat, hat" class="w-full px-3 py-2.5 rounded-xl border border-purple-300 font-bold text-base">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-black text-slate-700 mb-1">英文單字 (Word)</label>
+                                <input type="text" id="admPhonicsWord" required placeholder="例如: mat" class="w-full px-3 py-2.5 rounded-xl border border-purple-300 font-bold text-base">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-black text-slate-700 mb-1">中文意思</label>
+                                <input type="text" id="admPhonicsZh" required placeholder="例如: 地墊" class="w-full px-3 py-2.5 rounded-xl border border-purple-300 font-bold text-base">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-black text-slate-700 mb-1">小圖示 Emoji</label>
+                                <input type="text" id="admPhonicsImg" value="⭐" required class="w-full px-3 py-2.5 rounded-xl border border-purple-300 font-bold text-base">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-black text-slate-700 mb-1">簡單例句</label>
+                                <input type="text" id="admPhonicsSentence" required placeholder="例如: Sit on the mat." class="w-full px-3 py-2.5 rounded-xl border border-purple-300 font-bold text-base">
+                            </div>
+                        </div>
+                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl font-black text-base shadow">儲存至第 3 區發音拼讀</button>
+                    </form>
+                </div>
+
+                <!-- 3. Admin Lessons (Add Vocab/Sentence to existing lesson OR create new lesson) -->
+                <div id="adm-content-lessons" class="adm-content hidden space-y-6">
+                    <!-- Form A: Add Vocab to Existing Lesson -->
+                    <form onsubmit="handleAddVocabToLesson(event)" class="bg-emerald-50 p-5 rounded-2xl border-2 border-emerald-200 space-y-4">
+                        <h4 class="text-lg font-black text-emerald-900">➕ 在現有課程中新增「生字與例句」</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-black text-slate-700 mb-1">選擇要加入哪一課</label>
+                                <select id="admTargetLessonSelect" class="w-full px-3 py-2.5 rounded-xl border border-emerald-300 font-bold text-base bg-white"></select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-black text-slate-700 mb-1">生字 (英文)</label>
+                                <input type="text" id="admVocabWord" required placeholder="例如: Supermarket" class="w-full px-3 py-2.5 rounded-xl border border-emerald-300 font-bold text-base">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-black text-slate-700 mb-1">生字中文意思</label>
+                                <input type="text" id="admVocabZh" required placeholder="例如: 超級市場" class="w-full px-3 py-2.5 rounded-xl border border-emerald-300 font-bold text-base">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-black text-slate-700 mb-1">圖示 Emoji</label>
+                                <input type="text" id="admVocabImg" value="🌟" required class="w-full px-3 py-2.5 rounded-xl border border-emerald-300 font-bold text-base">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-black text-slate-700 mb-1">例句 (英文)</label>
+                                <input type="text" id="admVocabSent" required placeholder="例如: I go to the supermarket." class="w-full px-3 py-2.5 rounded-xl border border-emerald-300 font-bold text-base">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-black text-slate-700 mb-1">例句中文翻譯</label>
+                                <input type="text" id="admVocabSentZh" required placeholder="例如: 我去超級市場。" class="w-full px-3 py-2.5 rounded-xl border border-emerald-300 font-bold text-base">
+                            </div>
+                        </div>
+                        <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-black text-base shadow">加入此課生字庫</button>
+                    </form>
+
+                    <!-- Form B: Create Brand New Lesson -->
+                    <form onsubmit="handleCreateNewLesson(event)" class="bg-blue-50 p-5 rounded-2xl border-2 border-blue-200 space-y-4">
+                        <h4 class="text-lg font-black text-blue-900">📚 建立全新的一課 (例如 第11課、第12課)</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-black text-slate-700 mb-1">新課程名稱</label>
+                                <input type="text" id="admNewLessonTitle" required placeholder="例如: 第 11 課：看醫生與藥局" class="w-full px-3 py-2.5 rounded-xl border border-blue-300 font-bold text-base">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-black text-slate-700 mb-1">代表圖示 Emoji</label>
+                                <input type="text" id="admNewLessonEmoji" value="🏥" required class="w-full px-3 py-2.5 rounded-xl border border-blue-300 font-bold text-base">
+                            </div>
+                            <div class="sm:col-span-3">
+                                <label class="block text-xs font-black text-slate-700 mb-1">課程簡介</label>
+                                <input type="text" id="admNewLessonSub" required placeholder="例如: 身體不舒服與買藥常用語" class="w-full px-3 py-2.5 rounded-xl border border-blue-300 font-bold text-base">
+                            </div>
+                        </div>
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-black text-base shadow">建立新課程</button>
+                    </form>
+                </div>
+
+                <!-- 4. Admin Tips (Add Golden Sentences to Section 5) -->
+                <div id="adm-content-tips" class="adm-content hidden space-y-6">
+                    <form onsubmit="handleAddTip(event)" class="bg-amber-50 p-5 rounded-2xl border-2 border-amber-200 space-y-4">
+                        <h4 class="text-lg font-black text-amber-900">➕ 新增第 5 區「生活常用金句」</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-black text-slate-700 mb-1">英文金句</label>
+                                <input type="text" id="admTipEn" required placeholder="例如: Could you give me a discount?" class="w-full px-3 py-2.5 rounded-xl border border-amber-300 font-bold text-base">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-black text-slate-700 mb-1">中文意思</label>
+                                <input type="text" id="admTipZh" required placeholder="例如: 請問可以算我便宜一點嗎？" class="w-full px-3 py-2.5 rounded-xl border border-amber-300 font-bold text-base">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-black text-slate-700 mb-1">分類標籤</label>
+                                <input type="text" id="admTipTag" required placeholder="例如: 購物殺價" class="w-full px-3 py-2.5 rounded-xl border border-amber-300 font-bold text-base">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-black text-slate-700 mb-1">圖示 Emoji</label>
+                                <input type="text" id="admTipIcon" value="💡" required class="w-full px-3 py-2.5 rounded-xl border border-amber-300 font-bold text-base">
+                            </div>
+                        </div>
+                        <button type="submit" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-3 rounded-xl font-black text-base shadow">新增至第 5 區金句庫</button>
+                    </form>
+                </div>
+
+                <!-- 5. Admin Backup (Export / Import for PC <-> iPhone) -->
+                <div id="adm-content-backup" class="adm-content hidden space-y-6">
+                    <div class="bg-indigo-50 p-6 rounded-2xl border-2 border-indigo-200 space-y-4">
+                        <h4 class="text-xl font-black text-indigo-900">📲 電腦與 iPhone 資料同步 (匯出 / 匯入)</h4>
+                        <p class="text-sm text-slate-700 font-bold leading-relaxed">
+                            您在電腦上新增好課程、生字與金句後，可以點選「下載備份檔 (.json)」或「複製資料代碼」，傳送到 iPhone 上，再點選「匯入資料」即可一秒同步所有內容！
+                        </p>
+                        
+                        <div class="flex flex-wrap gap-3 pt-2">
+                            <button onclick="exportDataFile()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-xl font-black text-base shadow flex items-center gap-2">
+                                <i class="fa-solid fa-download"></i> 1. 下載備份檔案 (.json)
+                            </button>
+                            <button onclick="copyExportCode()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 rounded-xl font-black text-base shadow flex items-center gap-2">
+                                <i class="fa-solid fa-copy"></i> 複製資料代碼 (LINE/微信傳送最方便)
+                            </button>
+                        </div>
+
+                        <hr class="border-indigo-200 my-4">
+
+                        <div class="space-y-3">
+                            <label class="block text-base font-black text-indigo-900">📥 方式 A：選擇備份檔案匯入</label>
+                            <input type="file" id="importFileInput" accept=".json" onchange="importDataFile(event)" class="block w-full text-sm text-slate-700 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-black file:bg-indigo-600 file:text-white hover:file:bg-indigo-700">
+                        </div>
+
+                        <div class="space-y-3 pt-3">
+                            <label class="block text-base font-black text-indigo-900">📥 方式 B：貼上資料代碼直接匯入</label>
+                            <textarea id="importJsonTextarea" rows="3" placeholder="在此貼上從電腦複製過來的資料代碼..." class="w-full p-3 rounded-xl border border-indigo-300 text-xs font-mono"></textarea>
+                            <button onclick="importFromTextarea()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 px-6 py-2.5 rounded-xl font-black text-base shadow">
+                                確認貼上匯入
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Add User Form -->
-                <form onsubmit="handleAddUser(event)" class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
-                    <h4 class="text-lg font-black text-slate-800">新增使用者</h4>
-                    <div class="flex gap-3">
-                        <input type="text" id="newUserName" required placeholder="例如：Iris, Mom..." class="flex-1 px-4 py-3 rounded-xl border border-slate-300 text-base font-bold focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                        <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-black text-base shadow">
-                            新增
-                        </button>
-                    </div>
-                </form>
-
-                <!-- Users List -->
-                <div>
-                    <h4 class="text-lg font-black text-slate-800 mb-3">現有使用者列表</h4>
-                    <div id="adminUsersList" class="space-y-3">
-                        <!-- JS populated -->
-                    </div>
-                </div>
-
-                <div class="pt-4 flex justify-end">
-                    <button onclick="closeAdminModal()" class="bg-slate-800 text-white px-8 py-3 rounded-2xl font-black text-base shadow">
-                        關閉視窗
-                    </button>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript Data & Logic -->
     <script>
-        // --- State ---
-        let usersList = ["Iris", "Mom", "Dad"];
-        let currentUser = "Iris";
-        let activeLessonId = 1;
-        let currentNumberFilter = 'basic';
+        // ==========================================
+        // 1. ROBUST AUDIO & TTS ENGINE (iOS Fix + WebAudio ABC Melody)
+        // ==========================================
+        window._ttsUtterances = [];
+        let selectedVoice = null;
 
-        // --- Alphabet Data ---
-        const alphabetData = [
-            {l: "Aa", w: "Apple", zh: "蘋果", img: "🍎", bg: "bg-red-50 text-red-600 border-red-300"},
-            {l: "Bb", w: "Bus", zh: "公車", img: "🚌", bg: "bg-orange-50 text-orange-600 border-orange-300"},
-            {l: "Cc", w: "Cat", zh: "貓咪", img: "🐱", bg: "bg-amber-50 text-amber-600 border-amber-300"},
-            {l: "Dd", w: "Dog", zh: "狗狗", img: "🐶", bg: "bg-yellow-50 text-yellow-600 border-yellow-300"},
-            {l: "Ee", w: "Egg", zh: "雞蛋", img: "🥚", bg: "bg-emerald-50 text-emerald-600 border-emerald-300"},
-            {l: "Ff", w: "Fish", zh: "魚", img: "🐟", bg: "bg-teal-50 text-teal-600 border-teal-300"},
-            {l: "Gg", w: "Green", zh: "綠色", img: "🟢", bg: "bg-green-50 text-green-600 border-green-300"},
-            {l: "Hh", w: "Home", zh: "家", img: "🏠", bg: "bg-blue-50 text-blue-600 border-blue-300"},
-            {l: "Ii", w: "Ice", zh: "冰塊", img: "🧊", bg: "bg-indigo-50 text-indigo-600 border-indigo-300"},
-            {l: "Jj", w: "Juice", zh: "果汁", img: "🧃", bg: "bg-purple-50 text-purple-600 border-purple-300"},
-            {l: "Kk", w: "Key", zh: "鑰匙", img: "🔑", bg: "bg-pink-50 text-pink-600 border-pink-300"},
-            {l: "Ll", w: "Milk", zh: "牛奶", img: "🥛", bg: "bg-rose-50 text-rose-600 border-rose-300"},
-            {l: "Mm", w: "Money", zh: "錢", img: "💵", bg: "bg-cyan-50 text-cyan-600 border-cyan-300"},
-            {l: "Nn", w: "Name", zh: "名字", img: "📛", bg: "bg-sky-50 text-sky-600 border-sky-300"},
-            {l: "Oo", w: "Orange", zh: "柳橙", img: "🍊", bg: "bg-amber-50 text-amber-600 border-amber-300"},
-            {l: "Pp", w: "Park", zh: "公園", img: "🌳", bg: "bg-emerald-50 text-emerald-600 border-emerald-300"},
-            {l: "Qq", w: "Quiet", zh: "安靜", img: "🤫", bg: "bg-violet-50 text-violet-600 border-violet-300"},
-            {l: "Rr", w: "Rain", zh: "雨", img: "🌧️", bg: "bg-blue-50 text-blue-600 border-blue-300"},
-            {l: "Ss", w: "Seat", zh: "座位", img: "🪑", bg: "bg-rose-50 text-rose-600 border-rose-300"},
-            {l: "Tt", w: "Tea", zh: "茶", img: "🍵", bg: "bg-amber-50 text-amber-600 border-amber-300"},
-            {l: "Uu", w: "Up", zh: "向上", img: "⬆️", bg: "bg-emerald-50 text-emerald-600 border-emerald-300"},
-            {l: "Vv", w: "Very", zh: "非常", img: "⭐", bg: "bg-teal-50 text-teal-600 border-teal-300"},
-            {l: "Ww", w: "Water", zh: "水", img: "💧", bg: "bg-blue-50 text-blue-600 border-blue-300"},
-            {l: "Xx", w: "X-ray", zh: "X光", img: "🦴", bg: "bg-purple-50 text-purple-600 border-purple-300"},
-            {l: "Yy", w: "Yes", zh: "是的", img: "✅", bg: "bg-pink-50 text-pink-600 border-pink-300"},
-            {l: "Zz", w: "Zero", zh: "零", img: "0️⃣", bg: "bg-slate-100 text-slate-700 border-slate-300"}
+        function initVoices() {
+            if (!('speechSynthesis' in window)) return;
+            const voices = window.speechSynthesis.getVoices();
+            if (voices.length > 0) {
+                selectedVoice = voices.find(v => v.lang === 'en-US' && (v.name.includes('Samantha') || v.name.includes('Google') || v.name.includes('Natural')))
+                             || voices.find(v => v.lang === 'en-US')
+                             || voices.find(v => v.lang.startsWith('en'))
+                             || voices[0];
+            }
+        }
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = initVoices;
+            initVoices();
+        }
+
+        function speakText(text, speed = 1) {
+            stopAbcSong();
+            if (!('speechSynthesis' in window)) {
+                alert("您的裝置不支援語音朗讀功能");
+                return;
+            }
+            try {
+                window.speechSynthesis.cancel();
+                if (window.speechSynthesis.paused) {
+                    window.speechSynthesis.resume();
+                }
+            } catch (e) {}
+
+            setTimeout(() => {
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'en-US';
+                u.rate = speed;
+                if (!selectedVoice) initVoices();
+                if (selectedVoice) u.voice = selectedVoice;
+
+                window._ttsUtterances.push(u);
+                u.onend = () => {
+                    window._ttsUtterances = window._ttsUtterances.filter(item => item !== u);
+                };
+                u.onerror = () => {
+                    window._ttsUtterances = window._ttsUtterances.filter(item => item !== u);
+                };
+                window.speechSynthesis.speak(u);
+            }, 60);
+        }
+
+        // Web Audio API Melodic ABC Song + Stop Support
+        let abcSongPlaying = false;
+        let abcTimeouts = [];
+        let audioCtx = null;
+
+        function stopAbcSong() {
+            abcSongPlaying = false;
+            abcTimeouts.forEach(t => clearTimeout(t));
+            abcTimeouts = [];
+            const btn = document.getElementById('abcSongBtn');
+            if (btn) {
+                btn.className = "bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-2xl font-black text-lg shadow-lg flex items-center gap-2 bouncy-btn";
+                btn.innerHTML = `<i class="fa-solid fa-music"></i> <span>播放 ABC 字母歌 (有旋律)</span>`;
+            }
+        }
+
+        function stopAllAudio() {
+            stopAbcSong();
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        function playTone(freq, durationMs) {
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + durationMs / 1000);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + durationMs / 1000);
+            } catch (e) {}
+        }
+
+        function toggleAbcSong() {
+            if (abcSongPlaying) {
+                stopAllAudio();
+                return;
+            }
+            stopAllAudio();
+            abcSongPlaying = true;
+            const btn = document.getElementById('abcSongBtn');
+            if (btn) {
+                btn.className = "bg-rose-600 hover:bg-rose-700 text-white px-6 py-3 rounded-2xl font-black text-lg shadow-lg flex items-center gap-2 bouncy-btn animate-pulse";
+                btn.innerHTML = `<i class="fa-solid fa-stop"></i> <span>停止播放字母歌</span>`;
+            }
+
+            const notes = [
+                {l: "A", f: 261.6, d: 550}, {l: "B", f: 261.6, d: 550}, {l: "C", f: 392.0, d: 550}, {l: "D", f: 392.0, d: 550},
+                {l: "E", f: 440.0, d: 550}, {l: "F", f: 440.0, d: 550}, {l: "G", f: 392.0, d: 1100},
+                {l: "H", f: 349.2, d: 550}, {l: "I", f: 349.2, d: 550}, {l: "J", f: 329.6, d: 550}, {l: "K", f: 329.6, d: 550},
+                {l: "L", f: 293.7, d: 450}, {l: "M", f: 293.7, d: 450}, {l: "N", f: 293.7, d: 450}, {l: "O", f: 293.7, d: 450}, {l: "P", f: 261.6, d: 1100},
+                {l: "Q", f: 392.0, d: 550}, {l: "R", f: 392.0, d: 550}, {l: "S", f: 349.2, d: 550}, {l: "T", f: 349.2, d: 550},
+                {l: "U", f: 329.6, d: 550}, {l: "V", f: 329.6, d: 550}, {l: "W", f: 293.7, d: 1100},
+                {l: "X", f: 392.0, d: 550}, {l: "Y", f: 349.2, d: 550}, {l: "Z", f: 261.6, d: 1200}
+            ];
+
+            let elapsed = 0;
+            notes.forEach((n, idx) => {
+                const t = setTimeout(() => {
+                    if (!abcSongPlaying) return;
+                    playTone(n.f, n.d * 0.9);
+                    if ('speechSynthesis' in window) {
+                        window.speechSynthesis.cancel();
+                        const u = new SpeechSynthesisUtterance(n.l.toLowerCase());
+                        u.lang = 'en-US';
+                        u.rate = 1.15;
+                        if (selectedVoice) u.voice = selectedVoice;
+                        window._ttsUtterances.push(u);
+                        window.speechSynthesis.speak(u);
+                    }
+                    if (idx === notes.length - 1) {
+                        setTimeout(() => stopAbcSong(), 1300);
+                    }
+                }, elapsed);
+                abcTimeouts.push(t);
+                elapsed += n.d;
+            });
+        }
+
+        // ==========================================
+        // 2. DEFAULT DATA & LOCALSTORAGE PERSISTENCE
+        // ==========================================
+        const STORAGE_KEY = "IRIS_ENGLISH_HUB_V3_DATA";
+
+        const defaultAlphabet = [
+            {letter: "A", l: "Aa", w: "Apple", zh: "蘋果", img: "🍎", kk: "[e]", phonicsKk: "[æ]", phonicsHint: "嘴巴張大「애/欸」", phonicsSound: "a, apple"},
+            {letter: "B", l: "Bb", w: "Bus", zh: "公車", img: "🚌", kk: "[bi]", phonicsKk: "[b]", phonicsHint: "輕聲「ㄅ」", phonicsSound: "buh, bus"},
+            {letter: "C", l: "Cc", w: "Cat", zh: "貓咪", img: "🐱", kk: "[si]", phonicsKk: "[k]", phonicsHint: "輕聲「ㄎ」", phonicsSound: "kuh, cat"},
+            {letter: "D", l: "Dd", w: "Dog", zh: "狗狗", img: "🐶", kk: "[di]", phonicsKk: "[d]", phonicsHint: "輕聲「ㄉ」", phonicsSound: "duh, dog"},
+            {letter: "E", l: "Ee", w: "Egg", zh: "雞蛋", img: "🥚", kk: "[i]", phonicsKk: "[ɛ]", phonicsHint: "短音「耶」", phonicsSound: "eh, egg"},
+            {letter: "F", l: "Ff", w: "Fish", zh: "魚", img: "🐟", kk: "[ɛf]", phonicsKk: "[f]", phonicsHint: "咬下唇「ㄈ」", phonicsSound: "fuh, fish"},
+            {letter: "G", l: "Gg", w: "Green", zh: "綠色", img: "🟢", kk: "[dʒi]", phonicsKk: "[g]", phonicsHint: "喉嚨「ㄍ」", phonicsSound: "guh, green"},
+            {letter: "H", l: "Hh", w: "Home", zh: "家", img: "🏠", kk: "[etʃ]", phonicsKk: "[h]", phonicsHint: "嘆氣「ㄏ」", phonicsSound: "huh, home"},
+            {letter: "I", l: "Ii", w: "Ice", zh: "冰塊", img: "🧊", kk: "[aɪ]", phonicsKk: "[ɪ]", phonicsHint: "短音「一」", phonicsSound: "ih, igloo"},
+            {letter: "J", l: "Jj", w: "Juice", zh: "果汁", img: "🧃", kk: "[dʒe]", phonicsKk: "[dʒ]", phonicsHint: "「ㄐㄩ」", phonicsSound: "juh, juice"},
+            {letter: "K", l: "Kk", w: "Key", zh: "鑰匙", img: "🔑", kk: "[ke]", phonicsKk: "[k]", phonicsHint: "氣音「ㄎ」", phonicsSound: "kuh, key"},
+            {letter: "L", l: "Ll", w: "Milk", zh: "牛奶", img: "🥛", kk: "[ɛl]", phonicsKk: "[l]", phonicsHint: "舌尖「ㄌ」", phonicsSound: "luh, lion"},
+            {letter: "M", l: "Mm", w: "Money", zh: "錢", img: "💵", kk: "[ɛm]", phonicsKk: "[m]", phonicsHint: "閉嘴「ㄇ/呣」", phonicsSound: "muh, money"},
+            {letter: "N", l: "Nn", w: "Name", zh: "名字", img: "📛", kk: "[ɛn]", phonicsKk: "[n]", phonicsHint: "鼻音「ㄋ/嗯」", phonicsSound: "nuh, name"},
+            {letter: "O", l: "Oo", w: "Orange", zh: "柳橙", img: "🍊", kk: "[o]", phonicsKk: "[ɑ]", phonicsHint: "張嘴「啊」", phonicsSound: "ah, orange"},
+            {letter: "P", l: "Pp", w: "Park", zh: "公園", img: "🌳", kk: "[pi]", phonicsKk: "[p]", phonicsHint: "氣音「ㄆ」", phonicsSound: "puh, park"},
+            {letter: "Q", l: "Qq", w: "Quiet", zh: "安靜", img: "🤫", kk: "[kju]", phonicsKk: "[kw]", phonicsHint: "「ㄎㄨ」", phonicsSound: "kwuh, quiet"},
+            {letter: "R", l: "Rr", w: "Rain", zh: "雨", img: "🌧️", kk: "[ɑr]", phonicsKk: "[r]", phonicsHint: "捲舌「ㄖ」", phonicsSound: "ruh, rain"},
+            {letter: "S", l: "Ss", w: "Seat", zh: "座位", img: "🪑", kk: "[ɛs]", phonicsKk: "[s]", phonicsHint: "氣音「ㄙ」", phonicsSound: "sss, seat"},
+            {letter: "T", l: "Tt", w: "Tea", zh: "茶", img: "🍵", kk: "[ti]", phonicsKk: "[t]", phonicsHint: "氣音「ㄊ」", phonicsSound: "tuh, tea"},
+            {letter: "U", l: "Uu", w: "Up", zh: "向上", img: "⬆️", kk: "[ju]", phonicsKk: "[ʌ]", phonicsHint: "短促「啊」", phonicsSound: "uh, up"},
+            {letter: "V", l: "Vv", w: "Very", zh: "非常", img: "⭐", kk: "[vi]", phonicsKk: "[v]", phonicsHint: "震動咬唇「ヴ」", phonicsSound: "vuh, very"},
+            {letter: "W", l: "Ww", w: "Water", zh: "水", img: "💧", kk: "[`dʌbḷju]", phonicsKk: "[w]", phonicsHint: "「ㄨ」", phonicsSound: "wuh, water"},
+            {letter: "X", l: "Xx", w: "X-ray", zh: "X光", img: "🦴", kk: "[ɛks]", phonicsKk: "[ks]", phonicsHint: "「ㄎㄙ」", phonicsSound: "ks, box"},
+            {letter: "Y", l: "Yy", w: "Yes", zh: "是的", img: "✅", kk: "[waɪ]", phonicsKk: "[j]", phonicsHint: "「爺」", phonicsSound: "yuh, yes"},
+            {letter: "Z", l: "Zz", w: "Zero", zh: "零", img: "0️⃣", kk: "[zi]", phonicsKk: "[z]", phonicsHint: "震動齒音「茲」", phonicsSound: "zzz, zero"}
         ];
 
-        // --- Numbers Data ---
         const numbersBasic = [
-            {n: 1, w: "one", zh: "一", img: "1️⃣"}, {n: 2, w: "two", zh: "二", img: "2️⃣"}, {n: 3, w: "three", zh: "三", img: "3️⃣"},
-            {n: 4, w: "four", zh: "四", img: "4️⃣"}, {n: 5, w: "five", zh: "五", img: "5️⃣"}, {n: 6, w: "six", zh: "六", img: "6️⃣"},
-            {n: 7, w: "seven", zh: "七", img: "7️⃣"}, {n: 8, w: "eight", zh: "八", img: "8️⃣"}, {n: 9, w: "nine", zh: "九", img: "9️⃣"},
-            {n: 10, w: "ten", zh: "十", img: "🔟"}, {n: 11, w: "eleven", zh: "十一", img: "🔢"}, {n: 12, w: "twelve", zh: "十二", img: "🔢"},
-            {n: 13, w: "thirteen", zh: "十三", img: "🔢"}, {n: 14, w: "fourteen", zh: "十四", img: "🔢"}, {n: 15, w: "fifteen", zh: "十五", img: "🔢"},
-            {n: 16, w: "sixteen", zh: "十六", img: "🔢"}, {n: 17, w: "seventeen", zh: "十七", img: "🔢"}, {n: 18, w: "eighteen", zh: "十八", img: "🔢"},
-            {n: 19, w: "nineteen", zh: "十九", img: "🔢"}, {n: 20, w: "twenty", zh: "二十", img: "🔢"}
+            {n: 1, w: "one", zh: "一"}, {n: 2, w: "two", zh: "二"}, {n: 3, w: "three", zh: "三"},
+            {n: 4, w: "four", zh: "四"}, {n: 5, w: "five", zh: "五"}, {n: 6, w: "six", zh: "六"},
+            {n: 7, w: "seven", zh: "七"}, {n: 8, w: "eight", zh: "八"}, {n: 9, w: "nine", zh: "九"},
+            {n: 10, w: "ten", zh: "十"}, {n: 11, w: "eleven", zh: "十一"}, {n: 12, w: "twelve", zh: "十二"},
+            {n: 13, w: "thirteen", zh: "十三"}, {n: 14, w: "fourteen", zh: "十四"}, {n: 15, w: "fifteen", zh: "十五"},
+            {n: 16, w: "sixteen", zh: "十六"}, {n: 17, w: "seventeen", zh: "十七"}, {n: 18, w: "eighteen", zh: "十八"},
+            {n: 19, w: "nineteen", zh: "十九"}, {n: 20, w: "twenty", zh: "二十"}
         ];
 
         const numbersTens = [
-            {n: 10, w: "ten", zh: "十", img: "🔟"}, {n: 20, w: "twenty", zh: "二十", img: "🔢"}, {n: 30, w: "thirty", zh: "三十", img: "🔢"},
-            {n: 40, w: "forty", zh: "四十", img: "🔢"}, {n: 50, w: "fifty", zh: "五十", img: "🔢"}, {n: 60, w: "sixty", zh: "六十", img: "🔢"},
-            {n: 70, w: "seventy", zh: "七十", img: "🔢"}, {n: 80, w: "eighty", zh: "八十", img: "🔢"}, {n: 90, w: "ninety", zh: "九十", img: "🔢"},
-            {n: 100, w: "one hundred", zh: "一百", img: "💯"}
+            {n: 10, w: "ten", zh: "十"}, {n: 20, w: "twenty", zh: "二十"}, {n: 30, w: "thirty", zh: "三十"},
+            {n: 40, w: "forty", zh: "四十"}, {n: 50, w: "fifty", zh: "五十"}, {n: 60, w: "sixty", zh: "六十"},
+            {n: 70, w: "seventy", zh: "七十"}, {n: 80, w: "eighty", zh: "八十"}, {n: 90, w: "ninety", zh: "九十"},
+            {n: 100, w: "one hundred", zh: "一百"}
         ];
 
         const numbersMoney = [
-            {n: "$1.25", w: "one dollar and twenty-five cents", zh: "一元二十五分", img: "🪙"},
-            {n: "$5.00", w: "five dollars", zh: "五塊錢", img: "💵"},
-            {n: "$10.50", w: "ten dollars and fifty cents", zh: "十元五毛", img: "💵"},
-            {n: "$20.00", w: "twenty dollars", zh: "二十塊錢", img: "💶"},
-            {n: "$50.00", w: "fifty dollars", zh: "五十塊錢", img: "💶"},
-            {n: "$100.00", w: "one hundred dollars", zh: "一百塊錢", img: "💳"}
+            {n: "$1.25", w: "one dollar and twenty-five cents", zh: "一元二十五分"},
+            {n: "$2.50", w: "two dollars and fifty cents", zh: "兩元五毛"},
+            {n: "$5.00", w: "five dollars", zh: "五塊錢"},
+            {n: "$10.50", w: "ten dollars and fifty cents", zh: "十元五毛"},
+            {n: "$15.99", w: "fifteen ninety-nine", zh: "十五元九毛九"},
+            {n: "$20.00", w: "twenty dollars", zh: "二十塊錢"},
+            {n: "$50.00", w: "fifty dollars", zh: "五十塊錢"},
+            {n: "$100.00", w: "one hundred dollars", zh: "一百塊錢"}
         ];
 
-        // --- Phonics Data ---
-        const phonicsData = [
-            {family: "-AT Word Family (-at 組合)", pattern: "at", items: [
+        const defaultPhonicsFamilies = [
+            {pattern: "-at", soundText: "at. cat, rat, bat, hat", items: [
                 {w: "cat", zh: "貓咪", img: "🐱", sentence: "I see a cute cat."},
                 {w: "rat", zh: "老鼠", img: "🐀", sentence: "A small rat."},
                 {w: "bat", zh: "球棒", img: "🏏", sentence: "Play with a bat."},
                 {w: "hat", zh: "帽子", img: "👒", sentence: "Wear a blue hat."}
             ]},
-            {family: "-AN Word Family (-an 組合)", pattern: "an", items: [
-                {w: "can", zh: "可以 / 罐頭", img: "🥫", sentence: "Can I help you?"},
+            {pattern: "-an", soundText: "an. can, man, pan, fan", items: [
+                {w: "can", zh: "可以/罐頭", img: "🥫", sentence: "Can I help you?"},
                 {w: "man", zh: "男人", img: "👨", sentence: "The man is nice."},
-                {w: "pan", zh: "平底鍋", img: "🍳", sentence: "Hot frying pan."}
+                {w: "pan", zh: "平底鍋", img: "🍳", sentence: "Hot frying pan."},
+                {w: "fan", zh: "電風扇", img: "🪭", sentence: "Turn on the fan."}
             ]},
-            {family: "-EE / -EA Vowels (長母音組合)", pattern: "ee", items: [
+            {pattern: "-ap", soundText: "ap. map, cap, tap, nap", items: [
+                {w: "map", zh: "地圖", img: "🗺️", sentence: "Look at the map."},
+                {w: "cap", zh: "鴨舌帽", img: "🧢", sentence: "Red baseball cap."},
+                {w: "tap", zh: "水龍頭", img: "🚰", sentence: "Turn off the tap."},
+                {w: "nap", zh: "午睡", img: "😴", sentence: "Take a short nap."}
+            ]},
+            {pattern: "-ed / -en", soundText: "ed, en. bed, red, pen, ten", items: [
+                {w: "bed", zh: "床鋪", img: "🛏️", sentence: "Go to bed early."},
+                {w: "red", zh: "紅色", img: "🔴", sentence: "I like red apples."},
+                {w: "pen", zh: "原子筆", img: "🖊️", sentence: "Where is my pen?"},
+                {w: "ten", zh: "十", img: "🔟", sentence: "Ten fingers."}
+            ]},
+            {pattern: "-ig / -in", soundText: "ig, in. big, pig, bin, win", items: [
+                {w: "big", zh: "大的", img: "🐘", sentence: "A big apple."},
+                {w: "pig", zh: "小豬", img: "🐷", sentence: "Cute pink pig."},
+                {w: "bin", zh: "垃圾桶", img: "🗑️", sentence: "Put it in the bin."},
+                {w: "win", zh: "贏得", img: "🏆", sentence: "We win the game."}
+            ]},
+            {pattern: "-ot / -op", soundText: "ot, op. hot, pot, mop, shop", items: [
+                {w: "hot", zh: "熱的", img: "🔥", sentence: "Hot water please."},
+                {w: "pot", zh: "湯鍋", img: "🍲", sentence: "Cooking in a pot."},
+                {w: "mop", zh: "拖把", img: "🧹", sentence: "Mop the floor."},
+                {w: "shop", zh: "商店", img: "🏪", sentence: "Go to the coffee shop."}
+            ]},
+            {pattern: "-ug / -un", soundText: "ug, un. mug, hug, sun, run", items: [
+                {w: "mug", zh: "馬克杯", img: "☕", sentence: "A big coffee mug."},
+                {w: "hug", zh: "擁抱", img: "🫂", sentence: "Give me a hug."},
+                {w: "sun", zh: "太陽", img: "☀️", sentence: "The sun is warm."},
+                {w: "run", zh: "跑步", img: "🏃‍♀️", sentence: "Run in the park."}
+            ]},
+            {pattern: "-ee / -ea", soundText: "ee. tea, bee, see, tree", items: [
                 {w: "tea", zh: "茶", img: "🍵", sentence: "I want some hot tea."},
                 {w: "bee", zh: "蜜蜂", img: "🐝", sentence: "A busy bee."},
-                {w: "see", zh: "看見", img: "👀", sentence: "I see you."}
+                {w: "see", zh: "看見", img: "👀", sentence: "Long time no see."},
+                {w: "tree", zh: "大樹", img: "🌳", sentence: "Green apple tree."}
             ]},
-            {family: "-CK Ending Sound (結尾ck組合)", pattern: "ck", items: [
+            {pattern: "-ck", soundText: "ck. duck, lock, clock, sock", items: [
                 {w: "duck", zh: "鴨子", img: "🦆", sentence: "The duck swims."},
                 {w: "lock", zh: "鎖", img: "🔒", sentence: "Lock the door."},
-                {w: "clock", zh: "時鐘", img: "⏰", sentence: "What time is it?"}
+                {w: "clock", zh: "時鐘", img: "⏰", sentence: "Look at the clock."},
+                {w: "sock", zh: "襪子", img: "🧦", sentence: "Warm wool socks."}
+            ]},
+            {pattern: "-sh / -ch", soundText: "sh, ch. fish, wash, cash, lunch", items: [
+                {w: "fish", zh: "魚", img: "🐟", sentence: "Fresh fish today."},
+                {w: "wash", zh: "清洗", img: "🧼", sentence: "Wash your hands."},
+                {w: "cash", zh: "現金", img: "💵", sentence: "I pay by cash."},
+                {w: "lunch", zh: "午餐", img: "🍱", sentence: "Time for lunch."}
             ]}
         ];
 
-        // --- Comprehensive Lessons 1 to 10 ---
-        const lessonsData = [
+        const defaultLessons = [
             {
                 id: 1, title: "第 1 課：打招呼與問候", emoji: "👋", subtitle: "見到朋友與鄰居最實用的問候開場白。",
                 vocabulary: [
@@ -544,13 +774,13 @@
                 id: 2, title: "第 2 課：認識新朋友與自我介紹", emoji: "🤝", subtitle: "詢問名字與自我介紹常用句子。",
                 vocabulary: [
                     {word: "Name", zh: "名字", img: "📛", sentence: "What is your name?", sentenceZh: "請問妳叫什麼名字？"},
-                    {word: "My", zh: "我的", img: "🙋‍♀️", sentence: "My name is Iris.", sentenceZh: "我的名字叫 Iris。"},
+                    {word: "My", zh: "我的", img: "🙋‍♀️", sentence: "My name is Lily.", sentenceZh: "我的名字叫 Lily。"},
                     {word: "Meet", zh: "見面 / 認識", img: "🤝", sentence: "Nice to meet you.", sentenceZh: "很高興認識妳。"},
                     {word: "Friend", zh: "朋友", img: "👫", sentence: "You are my good friend.", sentenceZh: "妳是我的好朋友。"}
                 ],
                 dialogues: [
                     {speaker: "A", en: "What is your name?", zh: "請問妳叫什麼名字？"},
-                    {speaker: "B", en: "My name is Iris. Nice to meet you!", zh: "我的名字叫 Iris。很高興認識妳！"},
+                    {speaker: "B", en: "My name is Lily. Nice to meet you!", zh: "我的名字叫 Lily。很高興認識妳！"},
                     {speaker: "A", en: "Nice to meet you too.", zh: "我也很高興認識妳。"}
                 ]
             },
@@ -584,12 +814,12 @@
                 ]
             },
             {
-                id: 5, title: "第 5 課：日常物品與尋找手機", emoji: "📱", subtitle: "這是什麼？我的手機在哪裡？",
+                id: 5, title: "第 5 課：日常物品與尋找東西", emoji: "📱", subtitle: "這是什麼？我的手機在哪裡？",
                 vocabulary: [
                     {word: "Book", zh: "書本", img: "📖", sentence: "This is a good book.", sentenceZh: "這是一本好書。"},
-                    {word: "Pen", zh: "原子筆", img: "🖊️", sentence: "Where is my pen?", sentenceZh: "我的筆在哪裡？"},
+                    {word: "Glasses", zh: "眼鏡", img: "👓", sentence: "Where are my glasses?", sentenceZh: "我的眼鏡在哪裡？"},
                     {word: "Phone", zh: "手機", img: "📱", sentence: "My phone is on the table.", sentenceZh: "我的手機在桌上。"},
-                    {word: "Bag", zh: "包包", img: "👜", sentence: "This is my bag.", sentenceZh: "這是我的包包。"}
+                    {word: "Key", zh: "鑰匙", img: "🔑", sentence: "I found my key.", sentenceZh: "我找到我的鑰匙了。"}
                 ],
                 dialogues: [
                     {speaker: "A", en: "What is this?", zh: "這是什麼？"},
@@ -599,11 +829,11 @@
                 ]
             },
             {
-                id: 6, title: "第 6 課：顏色與大小尺寸", emoji: "🎨", subtitle: "喜歡的顏色與太大的衣物。",
+                id: 6, title: "第 6 課：顏色與大小尺寸", emoji: "🎨", subtitle: "喜歡的顏色與衣服尺寸。",
                 vocabulary: [
-                    {word: "Red", zh: "紅色", img: "🔴", sentence: "I like this red color.", zh: "我喜歡這個紅色。"},
+                    {word: "Red", zh: "紅色", img: "🔴", sentence: "I like this red color.", sentenceZh: "我喜歡這個紅色。"},
                     {word: "Blue", zh: "藍色", img: "🔵", sentence: "The sky is blue.", sentenceZh: "天空是藍色的。"},
-                    {word: "Big", zh: "大的", img: "🐘", sentence: "This shirt is too big.", sentenceZh: "這件襯衫太大件了。"},
+                    {word: "Big", zh: "大的", img: "🐘", sentence: "This coat is too big.", sentenceZh: "這件外套太大件了。"},
                     {word: "Small", zh: "小的", img: "🐁", sentence: "Do you have a small size?", sentenceZh: "妳們有小尺寸的嗎？"}
                 ],
                 dialogues: [
@@ -614,38 +844,38 @@
                 ]
             },
             {
-                id: 7, title: "第 7 課：好吃的食物與飲品", emoji: "🍵", subtitle: "想喝茶、水與肚子餓了的表達。",
+                id: 7, title: "第 7 課：餐廳與美食街點餐", emoji: "🍵", subtitle: "找座位、點熱水、要紙巾與打包。",
                 vocabulary: [
-                    {word: "Water", zh: "水", img: "💧", sentence: "I want some water, please.", sentenceZh: "請給我一些水。"},
-                    {word: "Tea", zh: "茶", img: "🍵", sentence: "Hot tea is very good.", sentenceZh: "熱茶非常好喝。"},
-                    {word: "Apple", zh: "蘋果", img: "🍎", sentence: "Eat an apple every day.", sentenceZh: "每天吃一顆蘋果。"},
-                    {word: "Bread", zh: "麵包", img: "🍞", sentence: "Fresh bread for breakfast.", sentenceZh: "早餐吃新鮮麵包。"}
+                    {word: "Seat", zh: "座位", img: "🪑", sentence: "Is this seat taken?", sentenceZh: "請問這裡有人坐嗎？"},
+                    {word: "Hot water", zh: "熱水", img: "💧", sentence: "Can I have hot water, please?", sentenceZh: "請給我一杯熱水好嗎？"},
+                    {word: "Tea", zh: "茶", img: "🍵", sentence: "I would like some hot tea.", sentenceZh: "我想要喝一點熱茶。"},
+                    {word: "To go", zh: "外帶 / 打包", img: "🥡", sentence: "Can I get this to go?", sentenceZh: "這個可以幫我打包外帶嗎？"}
                 ],
                 dialogues: [
-                    {speaker: "A", en: "Would you like some tea or water?", zh: "妳想要喝茶還是水？"},
-                    {speaker: "B", en: "Hot water, please.", zh: "請給我熱水，謝謝。"},
-                    {speaker: "A", en: "Here is your water.", zh: "這是您的水。"}
+                    {speaker: "A", en: "Excuse me, is this seat taken?", zh: "不好意思，請問這裡有人坐嗎？"},
+                    {speaker: "B", en: "No, please go ahead.", zh: "沒有人坐，請坐。"},
+                    {speaker: "A", en: "Can I have hot water and tea, please?", zh: "請給我熱水和熱茶好嗎？"},
+                    {speaker: "B", en: "Sure, right away.", zh: "好的，馬上來。"}
                 ]
             },
             {
-                id: 8, title: "第 8 課：超級市場與買東西結帳", emoji: "🛒", subtitle: "問價格、刷卡與需要袋子。",
+                id: 8, title: "第 8 課：超級市場與買菜結帳", emoji: "🛒", subtitle: "問價格、刷卡與需要購物袋。",
                 vocabulary: [
-                    {word: "Much", zh: "多少 (錢)", img: "💵", sentence: "How much is this?", sentenceZh: "這個多少錢？"},
-                    {word: "Money", zh: "錢", img: "💰", sentence: "I need some money.", sentenceZh: "我需要一些錢。"},
+                    {word: "How much", zh: "多少錢", img: "💵", sentence: "How much is this?", sentenceZh: "這個多少錢？"},
+                    {word: "Bag", zh: "袋子", img: "🛍️", sentence: "Can I have a bag, please?", sentenceZh: "請給我一個袋子好嗎？"},
                     {word: "Card", zh: "信用卡", img: "💳", sentence: "I will pay by card.", sentenceZh: "我刷卡付費。"},
-                    {word: "Cheap", zh: "便宜的", img: "🏷️", sentence: "This is very cheap.", sentenceZh: "這個很便宜。"}
+                    {word: "Receipt", zh: "收據", img: "🧾", sentence: "Here is your receipt.", sentenceZh: "這是您的收據。"}
                 ],
                 dialogues: [
                     {speaker: "A", en: "How much is this?", zh: "這個多少錢？"},
-                    {speaker: "B", en: "That is ten dollars.", zh: "那是十塊錢。"},
-                    {speaker: "A", en: "Can I pay by card?", zh: "我可以刷卡嗎？"},
-                    {speaker: "B", en: "Yes, of course.", zh: "可以，沒問題。"}
+                    {speaker: "B", en: "That is ten dollars. Do you need a bag?", zh: "總共十塊錢。妳需要袋子嗎？"},
+                    {speaker: "A", en: "No bag, thank you. I pay by card.", zh: "不用袋子，謝謝。我刷卡。"}
                 ]
             },
             {
-                id: 9, title: "第 9 課：問路與尋找洗手間", emoji: "🚻", subtitle: "洗手間在哪裡？左右轉與搭公車。",
+                id: 9, title: "第 9 課：問路與尋找洗手間", emoji: "🚻", subtitle: "洗手間在哪裡？左右轉與搭車。",
                 vocabulary: [
-                    {word: "Washroom", zh: "洗手間", img: "🚻", sentence: "Where is the washroom?", sentenceZh: "洗手間在哪裡？"},
+                    {word: "Washroom", zh: "洗手間", img: "🚻", sentence: "Where is the washroom?", sentenceZh: "請問洗手間在哪裡？"},
                     {word: "Bus", zh: "公車", img: "🚌", sentence: "We travel by bus.", sentenceZh: "我們搭公車出行。"},
                     {word: "Left", zh: "左邊", img: "⬅️", sentence: "Turn left here.", sentenceZh: "在這裡向左轉。"},
                     {word: "Right", zh: "右邊", img: "➡️", sentence: "Turn right at the corner.", sentenceZh: "在轉角向右轉。"}
@@ -657,218 +887,353 @@
                 ]
             },
             {
-                id: 10, title: "第 10 課：天氣與身體感覺", emoji: "☀️", subtitle: "今天天氣很冷、覺得有點累與祝你有美好的一天。",
+                id: 10, title: "第 10 課：天氣與身體感覺", emoji: "☀️", subtitle: "今天天氣如何與日常關心。",
                 vocabulary: [
                     {word: "Cold", zh: "冷的", img: "❄️", sentence: "It is cold today.", sentenceZh: "今天天氣很冷。"},
-                    {word: "Hot", zh: "熱的", img: "🔥", sentence: "The soup is hot.", sentenceZh: "湯很燙。"},
+                    {word: "Sunny", zh: "晴朗的", img: "☀️", sentence: "It is a nice sunny day.", sentenceZh: "今天是個好晴天。"},
                     {word: "Tired", zh: "疲倦的", img: "🥱", sentence: "I am a little tired.", sentenceZh: "我有一點累。"},
                     {word: "Doctor", zh: "醫生", img: "👨‍⚕️", sentence: "I need to see a doctor.", sentenceZh: "我需要看醫生。"}
                 ],
                 dialogues: [
                     {speaker: "A", en: "How are you feeling today?", zh: "妳今天感覺怎麼樣？"},
                     {speaker: "B", en: "I am a little tired and cold.", zh: "我有一點累而且覺得冷。"},
-                    {speaker: "A", en: "Have a good rest. Take care!", zh: "好好休息。保重！"}
+                    {speaker: "A", en: "Have a good rest. Take care!", zh: "好好休息。多保重！"}
                 ]
             }
         ];
 
-        // --- Tips Data (5. 生活常用金句速查) ---
-        const tipsData = [
-            {en: "Is this seat taken?", zh: "請問這裡有人坐嗎？", tag: "美食街 / 餐廳", icon: "🪑"},
-            {en: "Can I have hot water, please?", zh: "請給我一杯熱水好嗎？", tag: "餐廳 / 點水", icon: "🍵"},
-            {en: "Do you need a bag?", zh: "需要塑膠袋嗎？（店員常問）", tag: "超市購物", icon: "🛍️"},
-            {en: "How much is this?", zh: "這個多少錢？", tag: "購物結帳", icon: "💵"},
-            {en: "Where is the washroom?", zh: "請洗手間在哪裡？", tag: "問路 / 外出", icon: "🚻"},
-            {en: "Excuse me, can you help me?", zh: "不好意思，妳可以幫我一下嗎？", tag: "尋求協助", icon: "🙋‍♀️"},
+        const defaultTips = [
+            {en: "Is this seat taken?", zh: "請問這裡有人坐嗎？", tag: "美食街找位", icon: "🪑"},
+            {en: "Can I have hot water, please?", zh: "請給我一杯熱水好嗎？", tag: "餐廳點水", icon: "🍵"},
+            {en: "No ice, please.", zh: "請不要加冰塊。", tag: "點飲料", icon: "🧊"},
+            {en: "Can I have some napkins?", zh: "請給我一些餐巾紙好嗎？", tag: "餐廳用餐", icon: "🧻"},
+            {en: "Can I get a to-go box?", zh: "可以給我一個打包盒嗎？", tag: "餐廳打包", icon: "🥡"},
+            {en: "Check, please.", zh: "麻煩買單結帳。", tag: "餐廳結帳", icon: "🧾"},
+            {en: "Do you need a bag?", zh: "需要袋子嗎？（店員常問）", tag: "超市購物", icon: "🛍️"},
+            {en: "I brought my own bag.", zh: "我有自己帶購物袋。", tag: "超市購物", icon: "👜"},
+            {en: "How much is this?", zh: "請問這個多少錢？", tag: "詢問價格", icon: "💵"},
+            {en: "Where can I find the milk?", zh: "請問牛奶在哪裡？", tag: "超市找東西", icon: "🥛"},
+            {en: "Is this on sale?", zh: "請問這個有特價嗎？", tag: "超市購物", icon: "🏷️"},
             {en: "I will pay by card.", zh: "我刷卡付費。", tag: "結帳付款", icon: "💳"},
-            {en: "Have a nice day!", zh: "祝妳有個美好的一天！", tag: "道別祝福", icon: "🌟"},
-            {en: "Nice to meet you.", zh: "很高興認識妳。", tag: "打招呼", icon: "🤝"}
+            {en: "I will pay by cash.", zh: "我付現金。", tag: "結帳付款", icon: "💵"},
+            {en: "Where is the washroom?", zh: "請問洗手間在哪裡？", tag: "外出問路", icon: "🚻"},
+            {en: "Excuse me, can you help me?", zh: "不好意思，妳可以幫我一下嗎？", tag: "尋求協助", icon: "🙋‍♀️"},
+            {en: "Could you speak slower, please?", zh: "請妳說慢一點好嗎？", tag: "溝通求助", icon: "🐢"},
+            {en: "Wait a moment, please.", zh: "請稍等一下。", tag: "日常萬用", icon: "⏳"},
+            {en: "My English is a little bit.", zh: "我只會說一點點英文。", tag: "溝通求助", icon: "😊"},
+            {en: "Can I call my daughter?", zh: "我可以打電話給我女兒嗎？", tag: "緊急聯絡", icon: "📱"},
+            {en: "Have a wonderful day!", zh: "祝妳有美好的一天！", tag: "禮貌道別", icon: "🌟"}
         ];
 
-        // --- 500 Sentences Sample Data (6. 500常用生活句子) ---
-        const sentencesData = [
+        const default500Sentences = [
             {id: 1, en: "Hello, how are you?", zh: "哈囉，妳好嗎？"},
-            {id: 2, en: "Good morning, everyone.", zh: "大家早安。"},
-            {id: 3, en: "Nice to meet you today.", zh: "今天很高興認識妳。"},
-            {id: 4, en: "Thank you for your help.", zh: "謝謝妳的幫忙。"},
-            {id: 5, en: "You are very welcome.", zh: "別客氣。"},
-            {id: 6, en: "Excuse me, what time is it?", zh: "不好意思，現在幾點了？"},
-            {id: 7, en: "Can I have some hot tea?", zh: "我可以喝一點熱茶嗎？"},
-            {id: 8, en: "Where is the nearest station?", zh: "最近的車站在哪裡？"},
-            {id: 9, en: "How much does this cost?", zh: "這個要多少錢？"},
-            {id: 10, en: "I would like to pay by card.", zh: "我想要刷卡付費。"},
-            {id: 11, en: "Do you need any help?", zh: "妳需要任何幫忙嗎？"},
-            {id: 12, en: "It is a beautiful sunny day.", zh: "今天是個美麗的晴天。"},
-            {id: 13, en: "Please speak a little slower.", zh: "請說慢一點點。"},
-            {id: 14, en: "I don't understand this word.", zh: "我聽不懂這個單字。"},
-            {id: 15, en: "Have a wonderful weekend!", zh: "祝妳有個美好的週末！"},
-            {id: 16, en: "Where can I buy fresh fruit?", zh: "我可以在哪裡買到新鮮水果？"},
-            {id: 17, en: "This food is very delicious.", zh: "這個食物非常好吃。"},
-            {id: 18, en: "I am looking for my phone.", zh: "我在找我的手機。"},
-            {id: 19, en: "Let's go for a walk in the park.", zh: "我們去公園散步吧。"},
-            {id: 20, en: "See you later today!", zh: "待會見！"}
+            {id: 2, en: "I am doing great, thank you.", zh: "我過得很好，謝謝妳。"},
+            {id: 3, en: "Good morning, everyone.", zh: "大家早安。"},
+            {id: 4, en: "Good afternoon.", zh: "午安。"},
+            {id: 5, en: "Good evening.", zh: "晚安（傍晚問候）。"},
+            {id: 6, en: "Good night, sleep well.", zh: "晚安，祝好眠。"},
+            {id: 7, en: "Nice to meet you.", zh: "很高興認識妳。"},
+            {id: 8, en: "Long time no see.", zh: "好久不見。"},
+            {id: 9, en: "How is your family?", zh: "妳的家人好嗎？"},
+            {id: 10, en: "Everyone is fine.", zh: "大家都很好。"},
+            {id: 11, en: "Thank you for your help.", zh: "謝謝妳的幫忙。"},
+            {id: 12, en: "Thank you very much.", zh: "非常感謝妳。"},
+            {id: 13, en: "You are very welcome.", zh: "別客氣。"},
+            {id: 14, en: "No problem at all.", zh: "完全沒問題。"},
+            {id: 15, en: "Excuse me, what time is it?", zh: "不好意思，現在幾點了？"},
+            {id: 16, en: "Can I have some hot tea?", zh: "我可以喝一點熱茶嗎？"},
+            {id: 17, en: "Can I have a glass of warm water?", zh: "請給我一杯溫開水好嗎？"},
+            {id: 18, en: "Is this seat taken?", zh: "請問這個位子有人坐嗎？"},
+            {id: 19, en: "For here or to go?", zh: "內用還是外帶？（店員常問）"},
+            {id: 20, en: "For here, please.", zh: "我要內用，謝謝。"},
+            {id: 21, en: "To go, please.", zh: "我要外帶，謝謝。"},
+            {id: 22, en: "This food is very delicious.", zh: "這個食物非常好吃。"},
+            {id: 23, en: "I am full, thank you.", zh: "我吃飽了，謝謝。"},
+            {id: 24, en: "Where is the nearest bus stop?", zh: "最近的公車站在哪裡？"},
+            {id: 25, en: "How much does this cost?", zh: "這個要多少錢？"},
+            {id: 26, en: "It is too expensive.", zh: "這太貴了。"},
+            {id: 27, en: "I am just looking, thank you.", zh: "我只是隨便看看，謝謝。"},
+            {id: 28, en: "Do you have a smaller size?", zh: "請問有小一點的尺寸嗎？"},
+            {id: 29, en: "Do you have a bigger size?", zh: "請問有大一點的尺寸嗎？"},
+            {id: 30, en: "Can I try this on?", zh: "我可以試穿這個嗎？"},
+            {id: 31, en: "Where is the fitting room?", zh: "請問試衣間在哪裡？"},
+            {id: 32, en: "I will take this one.", zh: "我要買這一個。"},
+            {id: 33, en: "I would like to pay by card.", zh: "我想要刷卡付費。"},
+            {id: 34, en: "Can I have the receipt?", zh: "請給我收據好嗎？"},
+            {id: 35, en: "Do you need any help?", zh: "妳需要任何幫忙嗎？"},
+            {id: 36, en: "It is a beautiful sunny day.", zh: "今天是個美麗的晴天。"},
+            {id: 37, en: "It looks like rain today.", zh: "今天看起來像要下雨了。"},
+            {id: 38, en: "Don't forget your umbrella.", zh: "別忘了帶妳的雨傘。"},
+            {id: 39, en: "Put on your warm coat.", zh: "穿上妳保暖的外套。"},
+            {id: 40, en: "Please speak a little slower.", zh: "請說慢一點點。"},
+            {id: 41, en: "Can you say that again?", zh: "可以請妳再說一次嗎？"},
+            {id: 42, en: "I don't understand.", zh: "我聽不太懂。"},
+            {id: 43, en: "Where can I buy fresh fruit?", zh: "我可以在哪裡買到新鮮水果？"},
+            {id: 44, en: "These apples look very fresh.", zh: "這些蘋果看起來很新鮮。"},
+            {id: 45, en: "I am looking for my phone.", zh: "我在找我的手機。"},
+            {id: 46, en: "Let's go for a walk in the park.", zh: "我們去公園散步吧。"},
+            {id: 47, en: "Be careful on the stairs.", zh: "走樓梯要小心。"},
+            {id: 48, en: "Take your time, no rush.", zh: "慢慢來，不用急。"},
+            {id: 49, en: "Have a wonderful weekend!", zh: "祝妳有個美好的週末！"},
+            {id: 50, en: "See you next time!", zh: "下次見！"}
         ];
 
-        // --- Speech Synthesis Function ---
-        function speakText(text, speed = 1) {
-            if (!('speechSynthesis' in window)) {
-                alert("抱歉，您的瀏覽器不支援語音功能。");
-                return;
+        let appData = {
+            users: ["Lily", "Iris", "Mom", "Dad"],
+            currentUser: "Lily",
+            phonicsFamilies: defaultPhonicsFamilies,
+            lessons: defaultLessons,
+            tips: defaultTips,
+            sentences: default500Sentences
+        };
+
+        function loadSavedData() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (raw) {
+                    const parsed = JSON.parse(raw);
+                    if (parsed.users && parsed.users.length) appData.users = parsed.users;
+                    if (parsed.currentUser) appData.currentUser = parsed.currentUser;
+                    if (parsed.phonicsFamilies) appData.phonicsFamilies = parsed.phonicsFamilies;
+                    if (parsed.lessons) appData.lessons = parsed.lessons;
+                    if (parsed.tips) appData.tips = parsed.tips;
+                }
+            } catch (e) {}
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+            } catch (e) {}
+        }
+
+        // ==========================================
+        // 3. NAVIGATION & HISTORY ("回上一頁")
+        // ==========================================
+        let tabHistory = ['home'];
+        let currentTab = 'home';
+        let activeLessonId = 1;
+        let currentNumberFilter = 'basic';
+
+        function switchTab(tabId, pushHistory = true) {
+            stopAllAudio();
+            if (pushHistory && tabId !== currentTab) {
+                tabHistory.push(tabId);
             }
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'en-US';
-            utterance.rate = speed;
-            window.speechSynthesis.speak(utterance);
-        }
+            currentTab = tabId;
 
-        function speakAlphabetSong() {
-            speakText("A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z. Now I know my ABCs.", 0.8);
-        }
-
-        // --- User Selector & Management ---
-        function renderUserSelector() {
-            const select = document.getElementById('userSelector');
-            select.innerHTML = usersList.map(u => `<option value="${u}" ${u === currentUser ? 'selected' : ''}>${u}</option>`).join('');
-            const badge = document.getElementById('welcomeUserBadge');
-            badge.innerText = `Hello, ${currentUser}!`;
-        }
-
-        function changeUser(val) {
-            currentUser = val;
-            renderUserSelector();
-        }
-
-        // --- Tab Switching ---
-        function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('.nav-btn').forEach(el => {
-                el.classList.remove('bg-pink-500', 'text-white', 'shadow-md');
+                el.classList.remove('bg-pink-500', 'text-white', 'shadow');
                 el.classList.add('bg-slate-100', 'text-slate-700');
             });
 
-            const targetTab = document.getElementById(`tab-${tabId}`);
-            if (targetTab) targetTab.classList.remove('hidden');
+            const target = document.getElementById(`tab-${tabId}`);
+            if (target) target.classList.remove('hidden');
 
             const activeBtn = document.getElementById(`nav-${tabId}`);
             if (activeBtn) {
                 activeBtn.classList.remove('bg-slate-100', 'text-slate-700');
-                activeBtn.classList.add('bg-pink-500', 'text-white', 'shadow-md');
+                activeBtn.classList.add('bg-pink-500', 'text-white', 'shadow');
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // --- Render Alphabet ---
-        function renderAlphabet() {
-            const grid = document.getElementById('alphabetGrid');
-            grid.innerHTML = alphabetData.map(item => `
-                <div class="bg-white rounded-3xl p-5 shadow-md hover:shadow-xl transition border-4 ${item.bg.split(' ')[2]} flex flex-col items-center justify-between cursor-pointer bouncy-btn" onclick="speakText('${item.w}', 1)">
-                    <div class="text-4xl mb-1">${item.img}</div>
-                    <div class="text-3xl font-black ${item.bg.split(' ')[1]}">${item.l}</div>
-                    <div class="my-2 text-center">
-                        <div class="text-xl font-black text-slate-900">${item.w}</div>
-                        <div class="text-sm text-slate-500 font-bold">${item.zh}</div>
-                    </div>
-                    <div class="w-full flex gap-2 mt-3">
-                        <button onclick="event.stopPropagation(); speakText('${item.w}', 1)" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-900 py-2.5 rounded-2xl text-sm font-black flex items-center justify-center gap-1 shadow">
-                            <i class="fa-solid fa-volume-high"></i> 正常
-                        </button>
-                        <button onclick="event.stopPropagation(); speakText('${item.w}', 0.65)" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-2.5 rounded-2xl text-sm font-black shadow" title="慢速">
-                            🐢 慢
-                        </button>
-                    </div>
-                </div>
-            `).join('');
+        function goBack() {
+            if (tabHistory.length > 1) {
+                tabHistory.pop();
+                const prev = tabHistory[tabHistory.length - 1];
+                switchTab(prev, false);
+            } else {
+                switchTab('home', false);
+            }
         }
 
-        // --- Render Numbers ---
+        // ==========================================
+        // 4. UI RENDERING FUNCTIONS
+        // ==========================================
+        const fourColorThemes = [
+            { bg: "bg-pink-100", border: "border-pink-300", text: "text-pink-700", btn: "bg-pink-500 hover:bg-pink-600 text-white" },
+            { bg: "bg-emerald-100", border: "border-emerald-300", text: "text-emerald-700", btn: "bg-emerald-500 hover:bg-emerald-600 text-white" },
+            { bg: "bg-sky-100", border: "border-sky-300", text: "text-sky-700", btn: "bg-sky-500 hover:bg-sky-600 text-white" },
+            { bg: "bg-purple-100", border: "border-purple-300", text: "text-purple-700", btn: "bg-purple-500 hover:bg-purple-600 text-white" }
+        ];
+
+        function renderUserSelector() {
+            const select = document.getElementById('userSelector');
+            select.innerHTML = appData.users.map(u => `<option value="${u}" class="text-slate-900" ${u === appData.currentUser ? 'selected' : ''}>${u}</option>`).join('');
+            document.getElementById('welcomeUserBadge').innerText = `Hello, ${appData.currentUser}!`;
+        }
+
+        function changeUser(val) {
+            appData.currentUser = val;
+            saveData();
+            renderUserSelector();
+        }
+
+        function renderAlphabet() {
+            const grid = document.getElementById('alphabetGrid');
+            grid.innerHTML = defaultAlphabet.map((item, idx) => {
+                const theme = fourColorThemes[idx % 4];
+                return `
+                <div class="${theme.bg} rounded-3xl p-5 shadow-md border-4 ${theme.border} flex flex-col items-center justify-between">
+                    <div class="text-5xl mb-1">${item.img}</div>
+                    <div class="text-4xl font-black ${theme.text} tracking-wider">${item.l}</div>
+                    <div class="text-xs font-bold text-slate-500 mb-2">KK: ${item.kk}</div>
+
+                    <button onclick="speakText('${item.letter.toLowerCase()}', 0.85)" class="w-full ${theme.btn} py-2.5 px-3 rounded-2xl text-base font-black shadow flex items-center justify-center gap-1.5 mb-3 bouncy-btn">
+                        <i class="fa-solid fa-volume-high"></i> 唸字母 ${item.letter}
+                    </button>
+
+                    <div class="w-full bg-white/90 rounded-2xl p-3 text-center border border-white shadow-inner">
+                        <div class="text-xl font-black text-slate-900">${item.w}</div>
+                        <div class="text-sm text-slate-600 font-bold mb-2">${item.zh}</div>
+                        <div class="flex gap-1.5">
+                            <button onclick="speakText('${item.w}', 1)" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-900 py-2 rounded-xl text-xs font-black flex items-center justify-center gap-1 bouncy-btn">
+                                <i class="fa-solid fa-volume-high"></i> 單字
+                            </button>
+                            <button onclick="speakText('${item.w}', 0.6)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-2.5 py-2 rounded-xl text-xs font-black bouncy-btn">
+                                🐢 慢
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
         function renderNumbers(type) {
             currentNumberFilter = type;
             const grid = document.getElementById('numbersGrid');
-            const btn1 = document.getElementById('num-btn-1');
-            const btn2 = document.getElementById('num-btn-2');
-            const btn3 = document.getElementById('num-btn-3');
+            const b1 = document.getElementById('num-btn-1');
+            const b2 = document.getElementById('num-btn-2');
+            const b3 = document.getElementById('num-btn-3');
 
-            [btn1, btn2, btn3].forEach(b => {
-                b.className = "px-5 py-3 rounded-2xl font-black text-base bg-slate-100 text-slate-700 hover:bg-slate-200";
-            });
+            [b1, b2, b3].forEach(b => b.className = "px-5 py-2.5 rounded-2xl font-black text-base bg-white text-slate-700 border-2 border-slate-200 bouncy-btn");
+            let data = numbersBasic;
+            if (type === 'basic') { b1.className = "px-5 py-2.5 rounded-2xl font-black text-base bg-blue-600 text-white shadow bouncy-btn"; data = numbersBasic; }
+            else if (type === 'tens') { b2.className = "px-5 py-2.5 rounded-2xl font-black text-base bg-blue-600 text-white shadow bouncy-btn"; data = numbersTens; }
+            else { b3.className = "px-5 py-2.5 rounded-2xl font-black text-base bg-blue-600 text-white shadow bouncy-btn"; data = numbersMoney; }
 
-            let data = [];
-            if (type === 'basic') {
-                btn1.className = "px-5 py-3 rounded-2xl font-black text-base bg-blue-600 text-white shadow";
-                data = numbersBasic;
-            } else if (type === 'tens') {
-                btn2.className = "px-5 py-3 rounded-2xl font-black text-base bg-blue-600 text-white shadow";
-                data = numbersTens;
-            } else {
-                btn3.className = "px-5 py-3 rounded-2xl font-black text-base bg-blue-600 text-white shadow";
-                data = numbersMoney;
-            }
-
-            grid.innerHTML = data.map(item => `
-                <div class="bg-white rounded-3xl p-5 shadow-md hover:shadow-xl transition border-4 border-blue-200 flex flex-col justify-between cursor-pointer bouncy-btn" onclick="speakText('${item.w}', 1)">
+            grid.innerHTML = data.map((item, idx) => {
+                const theme = fourColorThemes[idx % 4];
+                const safeWord = item.w.replace(/'/g, "\\'");
+                return `
+                <div onclick="speakText('${safeWord}', 1)" class="${theme.bg} rounded-3xl p-5 shadow-md hover:shadow-xl transition border-4 ${theme.border} flex flex-col justify-between cursor-pointer bouncy-btn">
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-3xl">${item.img}</span>
-                        <span class="text-2xl font-black text-blue-600">${item.n}</span>
+                        <span class="text-3xl">🍓</span>
+                        <span class="text-3xl font-black ${theme.text}">${item.n}</span>
                     </div>
-                    <div class="my-2 text-center">
-                        <div class="text-base font-black text-slate-900">${item.w}</div>
-                        <div class="text-sm text-slate-500 font-bold">${item.zh}</div>
+                    <div class="my-2 text-center bg-white/80 rounded-2xl p-2.5">
+                        <div class="text-lg font-black text-slate-900 leading-snug">${item.w}</div>
+                        <div class="text-sm text-slate-600 font-bold mt-0.5">${item.zh}</div>
                     </div>
                     <div class="flex gap-2 mt-3">
-                        <button onclick="event.stopPropagation(); speakText('${item.w}', 1)" class="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-900 py-2.5 rounded-2xl text-sm font-black flex items-center justify-center gap-1 shadow">
+                        <button onclick="event.stopPropagation(); speakText('${safeWord}', 1)" class="flex-1 bg-white hover:bg-slate-50 text-slate-900 py-2.5 rounded-2xl text-sm font-black flex items-center justify-center gap-1 shadow">
                             <i class="fa-solid fa-volume-high"></i> 正常
                         </button>
-                        <button onclick="event.stopPropagation(); speakText('${item.w}', 0.65)" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-2.5 rounded-2xl text-sm font-black shadow">
+                        <button onclick="event.stopPropagation(); speakText('${safeWord}', 0.6)" class="bg-amber-200 hover:bg-amber-300 text-amber-950 px-3 py-2.5 rounded-2xl text-sm font-black shadow">
                             🐢 慢
                         </button>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
-        function filterNumbers(type) {
-            renderNumbers(type);
+        function filterNumbers(type) { renderNumbers(type); }
+
+        function switchPhonicsMode(mode) {
+            const btnKk = document.getElementById('phonics-mode-kk');
+            const btnFam = document.getElementById('phonics-mode-family');
+            const secKk = document.getElementById('phonicsKKSection');
+            const secFam = document.getElementById('phonicsFamilySection');
+
+            if (mode === 'kk') {
+                btnKk.className = "px-5 py-2.5 rounded-2xl font-black text-base bg-purple-600 text-white shadow bouncy-btn";
+                btnFam.className = "px-5 py-2.5 rounded-2xl font-black text-base bg-white text-slate-700 border-2 border-slate-200 bouncy-btn";
+                secKk.classList.remove('hidden');
+                secFam.classList.add('hidden');
+            } else {
+                btnFam.className = "px-5 py-2.5 rounded-2xl font-black text-base bg-purple-600 text-white shadow bouncy-btn";
+                btnKk.className = "px-5 py-2.5 rounded-2xl font-black text-base bg-white text-slate-700 border-2 border-slate-200 bouncy-btn";
+                secFam.classList.remove('hidden');
+                secKk.classList.add('hidden');
+            }
         }
 
-        // --- Render Phonics ---
         function renderPhonics() {
-            const grid = document.getElementById('phonicsGrid');
-            grid.innerHTML = phonicsData.map(group => `
-                <div class="bg-purple-50/70 rounded-3xl p-6 border-4 border-purple-200 flex flex-col justify-between shadow-md">
+            const kkGrid = document.getElementById('kkGrid');
+            kkGrid.innerHTML = defaultAlphabet.map((item, idx) => {
+                const theme = fourColorThemes[idx % 4];
+                return `
+                <div class="${theme.bg} rounded-3xl p-5 border-4 ${theme.border} shadow-md flex flex-col justify-between">
+                    <div class="flex justify-between items-center">
+                        <span class="text-4xl font-black ${theme.text}">${item.l}</span>
+                        <span class="bg-white px-3 py-1 rounded-xl text-base font-black text-purple-700 border border-purple-200 shadow-sm">
+                            音標 ${item.phonicsKk}
+                        </span>
+                    </div>
+                    <div class="my-3 bg-white/90 p-3 rounded-2xl text-center">
+                        <div class="text-base font-black text-slate-800">發音訣竅：${item.phonicsHint}</div>
+                        <div class="text-sm font-bold text-slate-500 mt-1">${item.img} 代表字：${item.w} (${item.zh})</div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="speakText('${item.phonicsSound}', 0.85)" class="flex-1 ${theme.btn} py-3 rounded-2xl font-black text-sm shadow flex items-center justify-center gap-1.5 bouncy-btn">
+                            <i class="fa-solid fa-volume-high"></i> 發音 ${item.phonicsKk}
+                        </button>
+                        <button onclick="speakText('${item.phonicsSound}', 0.55)" class="bg-amber-200 hover:bg-amber-300 text-amber-950 px-3 py-3 rounded-2xl font-black text-sm shadow bouncy-btn">
+                            🐢 慢
+                        </button>
+                    </div>
+                </div>
+            `}).join('');
+
+            const famGrid = document.getElementById('phonicsGrid');
+            famGrid.innerHTML = appData.phonicsFamilies.map((group, idx) => {
+                const theme = fourColorThemes[idx % 4];
+                const safeSound = group.soundText.replace(/'/g, "\\'");
+                return `
+                <div class="${theme.bg} rounded-3xl p-6 border-4 ${theme.border} flex flex-col justify-between shadow-md">
                     <div>
-                        <div class="bg-purple-600 text-white font-black px-4 py-2 rounded-2xl text-base inline-block mb-4 shadow">
-                            ${group.family}
-                        </div>
-                        <div class="space-y-4">
-                            ${group.items.map(item => `
-                                <div onclick="speakText('${item.sentence}', 1)" class="bg-white p-4 rounded-2xl shadow-sm border-2 border-purple-100 flex items-center justify-between cursor-pointer hover:bg-purple-50 transition">
-                                    <div class="flex items-center space-x-4">
+                        <button onclick="speakText('${safeSound}', 0.85)" class="w-full ${theme.btn} font-black px-5 py-4 rounded-2xl text-xl mb-5 shadow-lg flex items-center justify-between bouncy-btn">
+                            <span>${group.pattern} 組合 & 發音</span>
+                            <span class="bg-white/25 px-3 py-1 rounded-xl text-sm flex items-center gap-1">
+                                <i class="fa-solid fa-volume-high"></i> 點擊聽整組
+                            </span>
+                        </button>
+
+                        <div class="space-y-3">
+                            ${group.items.map(item => {
+                                const safeSent = item.sentence.replace(/'/g, "\\'");
+                                const safeWord = item.w.replace(/'/g, "\\'");
+                                return `
+                                <div onclick="speakText('${safeWord}. ${safeSent}', 0.9)" class="bg-white p-4 rounded-2xl shadow-sm border-2 border-white flex items-center justify-between cursor-pointer hover:bg-amber-50 transition bouncy-btn">
+                                    <div class="flex items-center space-x-3">
                                         <span class="text-4xl">${item.img}</span>
                                         <div>
-                                            <div class="text-lg font-black text-slate-900">${item.w} <span class="text-sm text-purple-600 font-bold">(${item.zh})</span></div>
+                                            <div class="text-xl font-black text-slate-900">${item.w} <span class="text-base text-purple-700 font-bold">(${item.zh})</span></div>
                                             <div class="text-sm text-slate-600 font-bold mt-0.5">${item.sentence}</div>
                                         </div>
                                     </div>
-                                    <button onclick="event.stopPropagation(); speakText('${item.w}', 0.65)" class="bg-purple-100 hover:bg-purple-200 text-purple-700 px-3 py-2 rounded-xl text-sm font-black shadow" title="發音">
-                                        <i class="fa-solid fa-volume-high"></i> 聽
-                                    </button>
+                                    <div class="flex gap-1.5 shrink-0">
+                                        <button onclick="event.stopPropagation(); speakText('${safeWord}', 0.85)" class="bg-purple-100 hover:bg-purple-200 text-purple-900 px-3 py-2 rounded-xl text-sm font-black shadow">
+                                            <i class="fa-solid fa-volume-high"></i> 單字
+                                        </button>
+                                        <button onclick="event.stopPropagation(); speakText('${safeWord}. ${safeSent}', 0.6)" class="bg-amber-100 hover:bg-amber-200 text-amber-900 px-3 py-2 rounded-xl text-sm font-black shadow">
+                                            🐢
+                                        </button>
+                                    </div>
                                 </div>
-                            `).join('')}
+                            `}).join('')}
                         </div>
                     </div>
-                    <button onclick="speakText('${group.family}', 1)" class="mt-6 bg-purple-600 hover:bg-purple-700 text-white w-full py-3.5 rounded-2xl font-black text-base flex items-center justify-center gap-2 shadow-lg">
-                        <i class="fa-solid fa-volume-high"></i> 朗讀整個群組發音
-                    </button>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
-        // --- Render Lessons (1-10) ---
         function renderLessonsNav() {
             const pills = document.getElementById('lessonsPills');
-            pills.innerHTML = lessonsData.map(lesson => `
-                <button onclick="selectLesson(${lesson.id})" id="lesson-pill-${lesson.id}" class="lesson-pill px-5 py-3 rounded-2xl font-black text-base whitespace-nowrap transition flex items-center gap-2 shadow-sm ${lesson.id === activeLessonId ? 'bg-emerald-600 text-white shadow-lg' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}">
+            pills.innerHTML = appData.lessons.map(lesson => `
+                <button onclick="selectLesson(${lesson.id})" class="px-5 py-3 rounded-2xl font-black text-base whitespace-nowrap transition flex items-center gap-2 shadow-sm bouncy-btn ${lesson.id === activeLessonId ? 'bg-emerald-600 text-white shadow-lg' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}">
                     <span>${lesson.emoji}</span> <span>第 ${lesson.id} 課</span>
                 </button>
             `).join('');
@@ -881,124 +1246,135 @@
         }
 
         function renderLessonDetail() {
-            const lesson = lessonsData.find(l => l.id === activeLessonId);
+            const lesson = appData.lessons.find(l => l.id === activeLessonId) || appData.lessons[0];
             const container = document.getElementById('lessonDetailContainer');
             if (!lesson) return;
 
             container.innerHTML = `
-                <div class="flex flex-wrap justify-between items-start gap-4 mb-6 pb-6 border-b-2 border-emerald-100">
+                <div class="flex flex-wrap justify-between items-center gap-4 mb-6 pb-4 border-b-2 border-emerald-100">
                     <div>
                         <div class="flex items-center gap-3">
                             <span class="text-4xl">${lesson.emoji}</span>
-                            <h3 class="text-3xl font-black text-slate-900">${lesson.title}</h3>
+                            <h3 class="text-2xl sm:text-3xl font-black text-slate-900">${lesson.title}</h3>
                         </div>
-                        <p class="text-slate-600 text-lg mt-2 font-bold">${lesson.subtitle}</p>
+                        <p class="text-slate-600 text-lg mt-1 font-bold">${lesson.subtitle}</p>
                     </div>
-                    <button onclick="speakLessonSummary()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-2xl font-black text-base shadow-lg flex items-center gap-2">
-                        <i class="fa-solid fa-headphones"></i> 朗讀本課重點
+                    <button onclick="speakLessonSummary()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 rounded-2xl font-black text-base shadow-lg flex items-center gap-2 bouncy-btn">
+                        <i class="fa-solid fa-headphones"></i> 朗讀整課生字與例句
                     </button>
                 </div>
 
-                <!-- Vocabulary Grid -->
-                <div class="mb-8">
-                    <h4 class="text-xl font-black text-slate-800 mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-star text-amber-500"></i> 核心生字與例句 (Vocabulary & Sentences)
-                    </h4>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        ${lesson.vocabulary.map(v => `
-                            <div class="bg-emerald-50/60 rounded-3xl p-5 border-2 border-emerald-200 flex flex-col justify-between shadow-sm">
-                                <div>
-                                    <div class="flex items-center justify-between mb-3">
-                                        <div class="flex items-center space-x-3">
-                                            <span class="text-3xl">${v.img}</span>
-                                            <div>
-                                                <span class="text-2xl font-black text-slate-900">${v.word}</span>
-                                                <span class="ml-2 text-base text-emerald-700 font-bold">(${v.zh})</span>
-                                            </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+                    ${lesson.vocabulary.map((v, idx) => {
+                        const theme = fourColorThemes[idx % 4];
+                        const safeWord = v.word.replace(/'/g, "\\'");
+                        const safeSent = v.sentence.replace(/'/g, "\\'");
+                        return `
+                        <div class="${theme.bg} rounded-3xl p-5 border-4 ${theme.border} flex flex-col justify-between shadow-md">
+                            <div class="space-y-3">
+                                <div class="flex items-center space-x-3 bg-white/90 p-3.5 rounded-2xl border border-white">
+                                    <span class="text-4xl shrink-0">${v.img || '🌟'}</span>
+                                    <div>
+                                        <div class="text-lg sm:text-xl font-black text-slate-900">
+                                            <span class="bg-emerald-600 text-white text-xs px-2.5 py-1 rounded-lg mr-1.5 align-middle">生字</span>
+                                            ${v.word}
+                                            <span class="text-base text-emerald-800 font-bold ml-1">(${v.zh})</span>
                                         </div>
                                     </div>
-                                    <div class="bg-white p-4 rounded-2xl border border-emerald-100 shadow-sm">
-                                        <p class="text-base font-black text-slate-900">${v.sentence}</p>
-                                        <p class="text-sm text-slate-500 font-bold mt-1">${v.sentenceZh}</p>
-                                    </div>
                                 </div>
-                                <div class="flex gap-2 mt-4">
-                                    <button onclick="speakText('${v.word}. ${v.sentence}', 1)" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl text-sm font-black flex items-center justify-center gap-1 shadow">
-                                        <i class="fa-solid fa-volume-high"></i> 🐇 正常
-                                    </button>
-                                    <button onclick="speakText('${v.word}. ${v.sentence}', 0.65)" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-4 py-3 rounded-2xl text-sm font-black shadow" title="慢速">
-                                        🐢 慢速
-                                    </button>
+
+                                <div class="bg-white p-4 rounded-2xl border border-white shadow-sm">
+                                    <p class="text-base sm:text-lg font-black text-slate-900 leading-snug">
+                                        <span class="bg-blue-600 text-white text-xs px-2.5 py-1 rounded-lg mr-1.5 align-middle">例句</span>
+                                        ${v.sentence}
+                                    </p>
+                                    <p class="text-sm text-slate-600 font-bold mt-1.5 pl-1">${v.sentenceZh}</p>
                                 </div>
                             </div>
-                        `).join('')}
-                    </div>
+
+                            <div class="flex gap-2 mt-4">
+                                <button onclick="speakText('${safeWord}', 0.9)" class="bg-white hover:bg-slate-100 text-slate-900 px-4 py-3 rounded-2xl text-sm font-black shadow bouncy-btn">
+                                    🔊 唸生字
+                                </button>
+                                <button onclick="speakText('${safeWord}. ${safeSent}', 0.95)" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-2xl text-sm font-black flex items-center justify-center gap-1 shadow bouncy-btn">
+                                    <i class="fa-solid fa-volume-high"></i> 🐇 正常朗讀
+                                </button>
+                                <button onclick="speakText('${safeWord}. ${safeSent}', 0.6)" class="bg-amber-200 hover:bg-amber-300 text-amber-950 px-4 py-3 rounded-2xl text-sm font-black shadow bouncy-btn">
+                                    🐢 慢速
+                                </button>
+                            </div>
+                        </div>
+                    `}).join('')}
                 </div>
 
-                <!-- Dialogues -->
+                ${lesson.dialogues && lesson.dialogues.length ? `
                 <div>
                     <h4 class="text-xl font-black text-slate-800 mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-comments text-blue-500"></i> 跟我一起念：生活情境對話
+                        <i class="fa-solid fa-comments text-blue-500"></i> 跟我一起念：情境對話練習
                     </h4>
-                    <div class="bg-slate-50 rounded-3xl p-6 border-2 border-slate-200 space-y-4 shadow-inner">
-                        ${lesson.dialogues.map(d => `
-                            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div class="bg-slate-100 rounded-3xl p-5 border-2 border-slate-200 space-y-3">
+                        ${lesson.dialogues.map(d => {
+                            const safeEn = d.en.replace(/'/g, "\\'");
+                            return `
+                            <div class="bg-white p-4 rounded-2xl shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                                 <div>
-                                    <span class="text-xs bg-slate-200 text-slate-700 font-black px-3 py-1 rounded-full">${d.speaker}</span>
-                                    <p class="text-lg font-black text-slate-900 mt-2">${d.en}</p>
-                                    <p class="text-sm text-slate-600 font-bold mt-0.5">${d.zh}</p>
+                                    <span class="text-xs bg-blue-100 text-blue-800 font-black px-3 py-1 rounded-full">${d.speaker}</span>
+                                    <p class="text-lg font-black text-slate-900 mt-1.5">${d.en}</p>
+                                    <p class="text-sm text-slate-600 font-bold">${d.zh}</p>
                                 </div>
-                                <div class="flex gap-2 w-full sm:w-auto">
-                                    <button onclick="speakText('${d.en}', 1)" class="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-2xl text-sm font-black flex items-center justify-center gap-1 shadow">
+                                <div class="flex gap-2 w-full sm:w-auto shrink-0">
+                                    <button onclick="speakText('${safeEn}', 0.95)" class="flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-2xl text-sm font-black flex items-center justify-center gap-1 shadow bouncy-btn">
                                         <i class="fa-solid fa-volume-high"></i> 播放
                                     </button>
-                                    <button onclick="speakText('${d.en}', 0.65)" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-4 py-3 rounded-2xl text-sm font-black shadow">
+                                    <button onclick="speakText('${safeEn}', 0.6)" class="bg-amber-200 hover:bg-amber-300 text-amber-950 px-4 py-2.5 rounded-2xl text-sm font-black shadow bouncy-btn">
                                         🐢 慢速
                                     </button>
                                 </div>
                             </div>
-                        `).join('')}
+                        `}).join('')}
                     </div>
                 </div>
+                ` : ''}
             `;
         }
 
         function speakLessonSummary() {
-            const lesson = lessonsData.find(l => l.id === activeLessonId);
+            const lesson = appData.lessons.find(l => l.id === activeLessonId);
             if (!lesson) return;
             const textToSpeak = lesson.vocabulary.map(v => v.word + ". " + v.sentence).join(". ");
-            speakText(textToSpeak, 0.8);
+            speakText(textToSpeak, 0.85);
         }
 
-        // --- Render Tips (5. 生活常用金句速查) ---
         function renderTips() {
             const grid = document.getElementById('tipsGrid');
-            grid.innerHTML = tipsData.map(t => `
-                <div class="bg-amber-50/70 rounded-3xl p-6 border-4 border-amber-200 flex flex-col justify-between shadow-md">
+            grid.innerHTML = appData.tips.map((t, idx) => {
+                const theme = fourColorThemes[idx % 4];
+                const safeEn = t.en.replace(/'/g, "\\'");
+                return `
+                <div class="${theme.bg} rounded-3xl p-5 border-4 ${theme.border} flex flex-col justify-between shadow-md">
                     <div>
-                        <div class="flex justify-between items-center mb-3">
-                            <span class="text-3xl">${t.icon}</span>
-                            <span class="text-xs bg-amber-200 text-amber-900 font-black px-3 py-1 rounded-full">${t.tag}</span>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-3xl">${t.icon || '☕'}</span>
+                            <span class="text-xs bg-white text-slate-800 font-black px-3 py-1 rounded-full shadow-sm">${t.tag}</span>
                         </div>
                         <p class="text-xl font-black text-slate-900 mt-2">"${t.en}"</p>
-                        <p class="text-base text-slate-600 font-bold mt-1">${t.zh}</p>
+                        <p class="text-base text-slate-700 font-bold mt-1">${t.zh}</p>
                     </div>
-                    <div class="flex gap-2 mt-6">
-                        <button onclick="speakText('${t.en}', 1)" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-2xl text-sm font-black flex items-center justify-center gap-1 shadow">
-                            <i class="fa-solid fa-volume-high"></i> 🐇 正常
+                    <div class="flex gap-2 mt-4">
+                        <button onclick="speakText('${safeEn}', 0.95)" class="flex-1 ${theme.btn} py-3 rounded-2xl text-sm font-black flex items-center justify-center gap-1 shadow bouncy-btn">
+                            <i class="fa-solid fa-volume-high"></i> 🐇 正常發音
                         </button>
-                        <button onclick="speakText('${t.en}', 0.65)" class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-3 rounded-2xl text-sm font-black shadow">
+                        <button onclick="speakText('${safeEn}', 0.6)" class="bg-amber-200 hover:bg-amber-300 text-amber-950 px-4 py-3 rounded-2xl text-sm font-black shadow bouncy-btn">
                             🐢 慢速
                         </button>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
-        // --- Render 500 Sentences (6. 500常用生活句子) ---
         function renderSentences(filterText = "") {
             const container = document.getElementById('sentencesListContainer');
-            const filtered = sentencesData.filter(s => 
+            const filtered = appData.sentences.filter(s => 
                 s.en.toLowerCase().includes(filterText.toLowerCase()) || s.zh.includes(filterText)
             );
 
@@ -1007,25 +1383,28 @@
                 return;
             }
 
-            container.innerHTML = filtered.map(s => `
-                <div class="bg-indigo-50/40 rounded-2xl p-5 border-2 border-indigo-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-sm">
+            container.innerHTML = filtered.map((s, idx) => {
+                const theme = fourColorThemes[idx % 4];
+                const safeEn = s.en.replace(/'/g, "\\'");
+                return `
+                <div class="${theme.bg} rounded-2xl p-4 border-2 ${theme.border} flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-sm">
                     <div>
                         <div class="flex items-center gap-2">
-                            <span class="w-8 h-8 bg-indigo-600 text-white rounded-xl flex items-center justify-center text-xs font-black">#${s.id}</span>
+                            <span class="px-2.5 py-1 bg-white text-slate-800 rounded-xl text-xs font-black shadow-sm">#${s.id}</span>
                             <span class="text-lg font-black text-slate-900">${s.en}</span>
                         </div>
-                        <p class="text-sm text-slate-600 font-bold mt-1 ml-10">${s.zh}</p>
+                        <p class="text-base text-slate-700 font-bold mt-1 ml-10">${s.zh}</p>
                     </div>
-                    <div class="flex gap-2 w-full sm:w-auto">
-                        <button onclick="speakText('${s.en}', 1)" class="flex-1 sm:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-sm font-black flex items-center justify-center gap-1 shadow">
+                    <div class="flex gap-2 w-full sm:w-auto shrink-0">
+                        <button onclick="speakText('${safeEn}', 0.95)" class="flex-1 sm:flex-none bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-sm font-black flex items-center justify-center gap-1 shadow bouncy-btn">
                             <i class="fa-solid fa-volume-high"></i> 播放
                         </button>
-                        <button onclick="speakText('${s.en}', 0.65)" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-2.5 rounded-xl text-sm font-black shadow">
+                        <button onclick="speakText('${safeEn}', 0.6)" class="bg-amber-200 hover:bg-amber-300 text-amber-950 px-3.5 py-2.5 rounded-xl text-sm font-black shadow bouncy-btn">
                             🐢 慢速
                         </button>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         function filterSentences() {
@@ -1033,7 +1412,9 @@
             renderSentences(query);
         }
 
-        // --- Admin Password & Management Modal ---
+        // ==========================================
+        // 5. ADMIN PANEL & EXPORT/IMPORT CMS
+        // ==========================================
         function promptAdminLogin() {
             document.getElementById('adminModal').classList.remove('hidden');
             document.getElementById('adminLoginSection').classList.remove('hidden');
@@ -1052,17 +1433,32 @@
                 document.getElementById('adminLoginSection').classList.add('hidden');
                 document.getElementById('adminPanelSection').classList.remove('hidden');
                 renderAdminUsersList();
+                populateAdminLessonSelect();
             } else {
                 alert("密碼錯誤！預設密碼為 1234");
             }
         }
 
+        function switchAdminTab(tabName) {
+            document.querySelectorAll('.adm-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.adm-tab-btn').forEach(el => {
+                el.classList.remove('bg-slate-900', 'text-white');
+                if (el.id !== 'adm-tab-backup') el.classList.add('bg-slate-100', 'text-slate-700');
+            });
+            document.getElementById(`adm-content-${tabName}`).classList.remove('hidden');
+            const btn = document.getElementById(`adm-tab-${tabName}`);
+            if (btn) {
+                btn.classList.remove('bg-slate-100', 'text-slate-700');
+                btn.classList.add('bg-slate-900', 'text-white');
+            }
+        }
+
         function renderAdminUsersList() {
             const listContainer = document.getElementById('adminUsersList');
-            listContainer.innerHTML = usersList.map((u, idx) => `
-                <div class="bg-white p-4 rounded-2xl border border-slate-200 flex justify-between items-center shadow-sm">
+            listContainer.innerHTML = appData.users.map((u, idx) => `
+                <div class="bg-white p-3.5 rounded-2xl border border-slate-200 flex justify-between items-center shadow-sm">
                     <span class="text-lg font-black text-slate-900">👤 ${u}</span>
-                    ${usersList.length > 1 ? `<button onclick="deleteUser(${idx})" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-black shadow">刪除</button>` : `<span class="text-xs text-slate-400 font-bold">預設帳號不可全刪</span>`}
+                    ${appData.users.length > 1 ? `<button onclick="deleteUser(${idx})" class="bg-rose-500 hover:bg-rose-600 text-white px-4 py-1.5 rounded-xl text-sm font-black shadow">刪除</button>` : `<span class="text-xs text-slate-400 font-bold">保留至少一位</span>`}
                 </div>
             `).join('');
         }
@@ -1071,41 +1467,195 @@
             event.preventDefault();
             const input = document.getElementById('newUserName');
             const name = input.value.trim();
-            if (name && !usersList.includes(name)) {
-                usersList.push(name);
+            if (name && !appData.users.includes(name)) {
+                appData.users.push(name);
+                appData.currentUser = name;
+                saveData();
                 input.value = "";
                 renderAdminUsersList();
                 renderUserSelector();
-                alert(`成功新增使用者：${name}`);
-            } else {
-                alert("名字不可空白或已存在！");
+                alert(`已新增並切換至使用者：${name}`);
             }
         }
 
         function deleteUser(index) {
-            if (usersList.length <= 1) {
-                alert("至少需要保留一個使用者！");
-                return;
+            if (appData.users.length <= 1) return;
+            const removed = appData.users.splice(index, 1);
+            if (appData.currentUser === removed[0]) {
+                appData.currentUser = appData.users[0];
             }
-            const removed = usersList.splice(index, 1);
-            if (currentUser === removed[0]) {
-                currentUser = usersList[0];
-            }
+            saveData();
             renderAdminUsersList();
             renderUserSelector();
-            alert("已刪除使用者。");
         }
 
-        // --- Initialization ---
-        window.onload = function() {
+        function handleAddPhonicsItem(event) {
+            event.preventDefault();
+            const pattern = document.getElementById('admPhonicsGroup').value.trim();
+            const soundText = document.getElementById('admPhonicsSound').value.trim();
+            const w = document.getElementById('admPhonicsWord').value.trim();
+            const zh = document.getElementById('admPhonicsZh').value.trim();
+            const img = document.getElementById('admPhonicsImg').value.trim() || '⭐';
+            const sentence = document.getElementById('admPhonicsSentence').value.trim();
+
+            let existing = appData.phonicsFamilies.find(g => g.pattern.toLowerCase() === pattern.toLowerCase());
+            if (existing) {
+                existing.items.push({ w, zh, img, sentence });
+                existing.soundText = soundText || (existing.soundText + ", " + w);
+            } else {
+                appData.phonicsFamilies.push({
+                    pattern,
+                    soundText: soundText || `${pattern}. ${w}`,
+                    items: [{ w, zh, img, sentence }]
+                });
+            }
+            saveData();
+            renderPhonics();
+            event.target.reset();
+            alert(`已成功將「${w} (${zh})」加入第 3 區發音拼讀！`);
+        }
+
+        function populateAdminLessonSelect() {
+            const sel = document.getElementById('admTargetLessonSelect');
+            if (!sel) return;
+            sel.innerHTML = appData.lessons.map(l => `<option value="${l.id}">${l.title}</option>`).join('');
+        }
+
+        function handleAddVocabToLesson(event) {
+            event.preventDefault();
+            const lessonId = parseInt(document.getElementById('admTargetLessonSelect').value, 10);
+            const word = document.getElementById('admVocabWord').value.trim();
+            const zh = document.getElementById('admVocabZh').value.trim();
+            const img = document.getElementById('admVocabImg').value.trim() || '🌟';
+            const sentence = document.getElementById('admVocabSent').value.trim();
+            const sentenceZh = document.getElementById('admVocabSentZh').value.trim();
+
+            const target = appData.lessons.find(l => l.id === lessonId);
+            if (target) {
+                target.vocabulary.push({ word, zh, img, sentence, sentenceZh });
+                saveData();
+                renderLessonDetail();
+                event.target.reset();
+                alert(`已成功新增生字「${word}」到 ${target.title}！`);
+            }
+        }
+
+        function handleCreateNewLesson(event) {
+            event.preventDefault();
+            const title = document.getElementById('admNewLessonTitle').value.trim();
+            const emoji = document.getElementById('admNewLessonEmoji').value.trim() || '📖';
+            const subtitle = document.getElementById('admNewLessonSub').value.trim();
+            const newId = appData.lessons.length + 1;
+
+            appData.lessons.push({
+                id: newId,
+                title,
+                emoji,
+                subtitle,
+                vocabulary: [
+                    { word: "Hello", zh: "哈囉", img: "👋", sentence: "Hello, how can I help you?", sentenceZh: "哈囉，請問需要什麼幫忙嗎？" }
+                ],
+                dialogues: []
+            });
+            saveData();
+            activeLessonId = newId;
+            renderLessonsNav();
+            renderLessonDetail();
+            populateAdminLessonSelect();
+            event.target.reset();
+            alert(`已建立「${title}」！您現在可以在上方表單為這課加入更多生字與例句。`);
+        }
+
+        function handleAddTip(event) {
+            event.preventDefault();
+            const en = document.getElementById('admTipEn').value.trim();
+            const zh = document.getElementById('admTipZh').value.trim();
+            const tag = document.getElementById('admTipTag').value.trim();
+            const icon = document.getElementById('admTipIcon').value.trim() || '💡';
+
+            appData.tips.unshift({ en, zh, tag, icon });
+            saveData();
+            renderTips();
+            event.target.reset();
+            alert(`已成功將金句「${en}」新增至第 5 區！`);
+        }
+
+        function exportDataFile() {
+            const dataStr = JSON.stringify(appData, null, 2);
+            const blob = new Blob([dataStr], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `iris_english_backup_${new Date().toISOString().slice(0,10)}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function copyExportCode() {
+            const dataStr = JSON.stringify(appData);
+            navigator.clipboard.writeText(dataStr).then(() => {
+                alert("已複製完整資料代碼！您可以透過 LINE 或 Email 傳給 iPhone，再貼上匯入。");
+            }).catch(() => {
+                document.getElementById('importJsonTextarea').value = dataStr;
+                alert("請直接複製下方文字框內的代碼！");
+            });
+        }
+
+        function applyImportedData(parsed) {
+            if (!parsed || typeof parsed !== 'object') throw new Error("無效格式");
+            if (parsed.users) appData.users = parsed.users;
+            if (parsed.currentUser) appData.currentUser = parsed.currentUser;
+            if (parsed.phonicsFamilies) appData.phonicsFamilies = parsed.phonicsFamilies;
+            if (parsed.lessons) appData.lessons = parsed.lessons;
+            if (parsed.tips) appData.tips = parsed.tips;
+            saveData();
+            renderAll();
+            alert("🎉 資料匯入成功！所有新課程、發音與金句都已更新！");
+            closeAdminModal();
+        }
+
+        function importDataFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const parsed = JSON.parse(e.target.result);
+                    applyImportedData(parsed);
+                } catch (err) {
+                    alert("檔案格式錯誤，無法匯入！");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function importFromTextarea() {
+            const raw = document.getElementById('importJsonTextarea').value.trim();
+            if (!raw) return alert("請先貼上資料代碼！");
+            try {
+                const parsed = JSON.parse(raw);
+                applyImportedData(parsed);
+            } catch (err) {
+                alert("代碼格式錯誤，請確認是否完整複製！");
+            }
+        }
+
+        function renderAll() {
             renderUserSelector();
             renderAlphabet();
-            renderNumbers('basic');
+            renderNumbers(currentNumberFilter);
             renderPhonics();
             renderLessonsNav();
             renderLessonDetail();
             renderTips();
             renderSentences();
+        }
+
+        window.onload = function() {
+            loadSavedData();
+            renderAll();
         };
     </script>
 </body>
